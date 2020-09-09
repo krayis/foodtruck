@@ -1,0 +1,460 @@
+@import 'bootstrap';
+
+body {
+    padding-top: 80px;
+    background: #ffffff;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.vertical-align--middle, table > tbody > tr > td.vertical-align--middle {
+    vertical-align: middle;
+}
+
+.content {
+    background: #fff;
+    border-radius: 3px;
+    padding: 0px;
+    border: 1px solid #dadce0;
+
+    .table {
+        margin-bottom: 0;
+    }
+}
+
+.page-header {
+    position: relative;
+    margin: 0;
+    border-bottom: none;
+    padding: 15px 0;
+
+    h1 {
+        margin: 0;
+    }
+
+    .page-action {
+        position: absolute;
+        right: 0;
+        top: 20px;
+    }
+
+}
+
+.breadcrumb {
+    margin-bottom: 0px;
+}
+
+td.gutter-right-0 {
+    padding-right: 0 !important;
+}
+
+
+.active {
+    color: #129d58;
+
+    a {
+        color: #129d58;
+    }
+}
+
+.inactive {
+    color: #747474;
+
+    a {
+        color: #747474;
+    }
+}
+
+.toggle-active-state {
+    .dropdown {
+        margin-top: 3px;
+
+        a {
+            display: block;
+
+            ion-icon {
+                display: block;
+            }
+        }
+    }
+}
+
+.white-space--nowrap {
+    white-space: nowrap;
+}
+
+.menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .flex-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    li.category {
+        margin-bottom: 45px;
+        .card--item {
+            padding: 0 5px;
+            width: 50%;
+            margin-bottom: 10px;
+        }
+        .card--item-content {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #dbdce0;
+            min-height: 90px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding-bottom: 35px;
+            &:hover {
+                border: 1px solid darken(#dbdce0, 20%);
+            }
+            .card--item-header {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                @include clearfix;
+                position: relative;
+
+                .card--item-price {
+                    font-weight: bold;
+                    z-index: 10;
+                    background: rgba(255, 255, 255, 0.85);
+                    padding: 3px;
+                    border-radius: 3px;
+                    position: absolute;
+                    right: 0;
+                    top: -4px;
+                }
+            }
+
+            .card--item-description {
+                color: #5f6368;
+                font-size: 14px;
+            }
+
+            .card--item-meta {
+                font-weight: bold;
+                position: absolute;
+                bottom: 10px;
+                line-height: 1;
+                font-size: 13px;
+            }
+
+            .card--item-preview {
+                width: 150px;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                overflow: hidden;
+                border-top-right-radius: 3px;
+                border-bottom-right-radius: 3px;
+                background-size: cover;
+                background-position: center center;
+            }
+
+            .has-thumbnail {
+                padding-right: 160px;
+            }
+        }
+    }
+}
+
+
+.ui-widget {
+    background-color: #ffffff;
+    position: absolute;
+    display: none;
+    &.ui-autocomplete {
+        list-style-type: none;
+        border: 1px solid #dbdce0;
+        border-radius: 3px;
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+        li {
+            padding: 2px 10px;
+            cursor: pointer;
+            &:hover {
+                background: $brand-primary;
+                color: #ffffff;
+            }
+        }
+    }
+
+    &.ui-datepicker {
+        border: 1px solid #e0e1e5;
+        width: 17em;
+        padding: .2em .2em 0;
+        border-radius: 3px;
+        .ui-datepicker-title {
+            margin: 0 2.3em;
+            line-height: 1.8em;
+            text-align: center;
+            position: relative;
+        }
+        table {
+            width: 100%;
+            font-size: .9em;
+            border-collapse: collapse;
+            margin: 0 0 .4em;
+            text-align: center;
+            th {
+                padding: .7em .3em;
+                text-align: center;
+                font-weight: bold;
+                border: 0;
+            }
+
+            td {
+                a {
+                    display: block;
+                    padding: .2em;
+                    text-decoration: none;
+                }
+            }
+
+            .ui-state-disabled {
+                cursor: default !important;
+                pointer-events: none;
+            }
+
+            .ui-state-active {
+                background: $brand-primary;
+                color: #ffffff;
+                border-radius: 2px;
+            }
+            .ui-state-hover {
+                background: #f0f0f0;
+                border-radius: 2px;
+            }
+        }
+    }
+    .ui-icon {
+        text-indent: -99999px;
+        overflow: hidden;
+        width: 16px;
+        height: 16px;
+        display: block;
+    }
+    .ui-datepicker-prev,
+    .ui-datepicker-next {
+        width: 28px;
+        height: 28px;
+        position: absolute;
+        display: block;
+        cursor: pointer;
+        padding: 2px;
+        top: 0;
+        > span {
+            display: block;
+            position: absolute;
+            left: 50%;
+            margin-left: -8px;
+            top: 50%;
+            margin-top: -8px;
+        }
+    }
+
+    .ui-datepicker-prev {
+        left: 0;
+        > span{
+            background-size: 16px;
+            background-image: url('/images/icons/chevron-back.svg');
+        }
+    }
+    .ui-datepicker-next {
+        right: 0;
+        > span {
+            background-size: 16px;
+            background-image: url('/images/icons/chevron-forward.svg');
+        }
+    }
+}
+
+@for $i from 0 through 15 {
+    .mb-#{$i} {
+        margin-bottom: #{$i}px;
+    }
+    .mt-#{$i} {
+        margin-top: #{$i}px;
+    }
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+
+.nav {
+    &.nav-tabs {
+        li {
+            a {
+                color: lighten(#000000, 45%);
+            }
+        }
+
+        > li.active {
+            a {
+                color: $brand-primary;
+                border: none;
+                border-bottom: none;
+            }
+        }
+    }
+}
+
+.table--modifier {
+    .header {
+        font-size: 18px;
+        @include clearfix;
+    }
+
+    [aria-expanded="true"] {
+        .add {
+            display: none;
+        }
+
+        .remove {
+            display: inline-block;
+        }
+    }
+
+    [aria-expanded="false"] {
+        .add {
+            display: inline-block;
+        }
+
+        .remove {
+            display: none;
+        }
+    }
+
+}
+
+
+input[type=radio] {
+    margin-top: 0;
+}
+
+input[type=checkbox] {
+    margin-top: 2px;
+}
+
+.form--cut-off {
+    .form-group {
+        margin-right: 10px;
+    }
+}
+
+
+.card--cut-off {
+    padding: 10px;
+    border-bottom: 1px solid $table-border-color;
+    h3 {
+        margin: 0 0 5px;
+        font-weight: 400;
+    }
+
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+.cursor-move {
+    cursor: move;
+}
+.cursor-grab {
+    cursor: grab;
+}
+.table-icon {
+    display: inline-block;
+    ion-icon {
+        display: block;
+    }
+}
+.table-condensed {
+    .table-icon-padding {
+        padding: $table-condensed-cell-padding;
+    }
+}
+.table-icon-padding {
+    padding: $table-cell-padding;
+}
+.pd-0 {
+    padding: 0!important;
+}
+
+
+.enabled {
+    ion-icon {
+        color: $brand-success;
+    }
+}
+
+.disabled {
+    ion-icon {
+        color: #747474;
+    }
+}
+
+ion-icon {
+    position: relative;
+    top: 2px;
+}
+
+
+.nav-tabs {
+    .ios-arrow-down {
+        font-size: 12px;
+    }
+    li.open > a {
+        border: none;
+        color: $brand-primary;
+    }
+}
+
+
+.marker--truck {
+    background: #fff;
+}
+
+.icon-spin {
+    animation: icon-spin 2s infinite linear;
+}
+
+@keyframes icon-spin {
+    0% {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+
+.order-list {
+    ul {
+        margin: 0;
+        padding: 0 0 0 15px;
+        list-style-type: disc;
+        li {
+            font-size: 14px;
+            color: #6b6b83;
+            padding: 0;
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+}

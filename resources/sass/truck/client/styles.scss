@@ -1,0 +1,237 @@
+@import 'bootstrap';
+
+.navbar-absolute-top {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    border-radius: 0;
+}
+
+@media only screen and (min-width: $screen-sm) {
+    .navbar-right {
+        margin-right: -30px;
+    }
+}
+
+.header {
+    background-image: url('/images/sale_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 0;
+    @media only screen and (min-width: $screen-sm) {
+        padding: 90px 0;
+    }
+    @media only screen and (min-width: $screen-md) {
+        padding: 90px 0;
+    }
+    @media only screen and (min-width: $screen-lg) {
+        padding: 180px 0;
+    }
+    color: #ffffff;
+    position: relative;
+
+    &::before {
+        content: " ";
+        background: rgba(0, 0, 0, .17);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        font-size: 42px;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        @media only screen and (min-width : $screen-sm) {
+            font-size: 48px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        @media only screen and (min-width : $screen-md) {
+            font-size: 61px;
+        }
+        small {
+            font-size: 24px;
+            display: block;
+            color: #ffffff;
+            margin-top: 15px;
+            text-align: center;
+            @media only screen and (min-width : $screen-sm) {
+                text-align: left;
+                margin-top: 15px;
+            }
+        }
+    }
+
+    .card {
+        color: #000000;
+
+        .card-header {
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 4px;
+
+        @media only screen and (min-width : $screen-md) {
+            min-width: 450px;
+            max-width: 450px;
+            float: right;
+        }
+    }
+}
+
+.navbar {
+    .navbar-nav {
+        font-size: 24px;
+    }
+
+    .navbar-brand {
+        font-size: 26px;
+    }
+
+    //.navbar-right {
+    //    position: relative;
+    //    top: 17px;
+    //}
+}
+
+
+.register-page {
+    background: #f7f7f7;
+    padding-top: 30px;
+
+    .card {
+        .card-header {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        font-size: 14px;
+        max-width: 540px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 24px;
+        border: 1px solid rgba(0, 0, 0, .25);
+    }
+}
+
+
+body.login-page {
+    background: #f7f7f7;
+    padding-top: 30px;
+
+    .card {
+        .card-header {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        font-size: 14px;
+        max-width: 340px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 24px;
+        border: 1px solid rgba(0, 0, 0, .25);
+    }
+}
+
+
+.about {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    @media only screen and (min-width: $screen-sm) {
+        padding: 45px;
+    }
+    background: #f2f3f4;
+
+    .brand {
+        font-size: 32px;
+        font-weight: 700;
+        @media only screen and (min-width: $screen-sm) {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translate(0%, -50%);
+        }
+    }
+
+    p {
+        margin: 0;
+        @media only screen and (min-width: $screen-sm) {
+            width: 50%;
+            left: 50%;
+            float: right;
+        }
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .relative {
+        @include clearfix;
+    }
+}
+
+.features {
+    padding: 45px 0;
+    @media only screen and (min-width: $screen-sm) {
+        padding: 90px 0;
+    }
+
+    h2 {
+        margin: 0 0 15px;
+        font-weight: 400;
+    }
+
+    ul.feature-list {
+        margin: 0 -10px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+
+        li {
+            padding: 0 10px;
+            width: 50%;
+            margin-top: 20px;
+
+            .card {
+                background: #ffffff;
+                padding: 30px;
+                border-radius: 5px;
+                border: 1px solid #dbdce0;
+                min-height: 90px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                text-align: center;
+
+                h3 {
+                    margin: 0 0 10px;
+                }
+
+                p {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

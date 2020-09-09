@@ -1,0 +1,109 @@
+.container--order {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 15px;
+    .food-truck-name {
+        font-size: 36px;
+        font-weight: 400;
+        margin: 45px 0 15px;
+    }
+    .food-truck-address {
+        margin-bottom: 0;
+    }
+    .food-truck-schedule {
+        margin-bottom: 30px;
+    }
+    .category-menu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-top: 1px solid #ebebeb;
+        border-bottom: 1px solid #ebebeb;
+        @include clearfix;
+        li {
+            float: left;
+            margin-right: 30px;
+            a {
+                padding: 15px 0;
+                color: #000000;
+                display: block;
+                text-decoration: none;
+            }
+        }
+    }
+    .menu {
+        .category {
+            margin-bottom: 45px;
+            .category-name {
+                font-size: 24px;
+                font-weight: 700;
+                padding-top: 30px;
+                margin-bottom: 15px;
+            }
+        }
+        .items {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            margin: 0 -10px;
+            flex-flow: row wrap;
+            display: flex;
+            .item {
+                cursor: pointer;
+                width: 100%;
+                @media screen and (min-width: $mobile-breakpoint) {
+                    width: 50%;
+                }
+                padding: 0 10px;
+                margin-bottom: 20px;
+                min-height: 120px;
+                &.item--has-thumbnail {
+                    .item-inner {
+                        padding-right: 160px;
+                    }
+                }
+                .item-inner {
+                    border: 1px solid #e0e1e5;
+                    padding: 15px;
+                    border-radius: 4px;
+                    flex-direction: column;
+                    display: flex;
+                    height: 100%;
+                    position: relative;
+                    .item-name {
+                        font-size: 18px;
+                        font-weight: 700;
+                        line-height: 1;
+                        margin-bottom: 5px;
+                    }
+                    .item-description {
+                        font-size: 16px;
+                        color: #545454;
+                    }
+                    .item-price {
+                        background: rgba(255, 255, 255, 0.8);
+                        line-height: 1;
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        border-radius: 2px;
+                        font-weight: 700;
+                        padding: 5px 10px;
+                        font-size: 18px;
+                    }
+                    .item-thumbnail {
+                        position: absolute;
+                        right: -1px;
+                        top: -1px;
+                        bottom: -1px;
+                        width: 150px;
+                        background-size: cover;
+                        background-position: center;
+                        border-top-right-radius: 4px;
+                        border-bottom-right-radius: 4px;
+                    }
+                }
+            }
+        }
+    }
+}
