@@ -83,14 +83,13 @@ class SearchController extends Controller
 
         $geotools = new \League\Geotools\Geotools();
         $encoded = $geotools->geohash()->encode($nw); // 12 is the default length / precision
-        dd($encoded->getGeohash());
+
         $boundingBox = $encoded->getBoundingBox();
         $southWest   = $boundingBox[0];
 
         $northEast   = $boundingBox[1];
 
         $encoded = $geotools->geohash()->encode($northEast);
-        dd($encoded);
 
         return response()->json();
     }
