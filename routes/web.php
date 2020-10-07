@@ -61,8 +61,10 @@ Route::group(['middleware' => ['api']], function() {
     Route::get('api/search/suggestions', 'SearchController@suggestions')->name('api.search@suggestions');
 });
 
-Route::get('ouath/square', 'SquareController@callback');
-Route::get('square', 'SquareController@index');
+Route::get('oauth/square', 'SquareController@oauth');
+Route::get('oauth/square/cb', 'SquareController@callback');
+Route::get('pay', 'SquareController@paymentPage');
+Route::post('process-payment', 'SquareController@processPayment');
 Route::get('api/truck/{truck}', 'TruckController@index')->name('api.truck');
 Route::get('checkout/{id}', 'SearchController@index')->name('search.index');
 Route::get('menu/{id}', 'SearchController@index')->name('search.index');
