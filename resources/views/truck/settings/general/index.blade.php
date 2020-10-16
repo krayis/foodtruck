@@ -1,9 +1,10 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
-<div class="container">
+
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-24 col-md-12">
             <div class="page-header">
                 <h1>Truck Settings</h1>
             </div>
@@ -105,6 +106,6 @@
             </form>
         </div>
     </div>
-</div>
 
-@include('truck.layouts.client.footer')
+
+@endsection

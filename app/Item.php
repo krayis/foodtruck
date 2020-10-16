@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 class Item extends Model
 {
     protected $fillable = [
-        'truck_id', 'user_id', 'category_id', 'name', 'price', 'thumbnail', 'description', 'active', 'sort_order', 'deleted'
+        'truck_id', 'user_id', 'category_id', 'name', 'price', 'thumbnail', 'description', 'active', 'sort_order', 'deleted', 'oos_until'
     ];
 
     public function category()
@@ -22,14 +22,14 @@ class Item extends Model
         return $this->belongsTo('App\Truck');
     }
 
-    public function modifierCategories()
+    public function modifierGroups()
     {
-        return $this->belongsToMany('App\ModifierCategory', 'App\ItemModifierCategory');
+        return $this->belongsToMany('App\ModifierGroup', 'App\ItemModifierGroup')->orderBy('sort_order', 'asc');
     }
 
     public function modifiers()
     {
-        return $this->hasManyThrough('App\Modifier', 'App\ItemModifierCategory', 'item_id', 'modifier_category_id', 'id', 'modifier_category_id');
+        return $this->hasManyThrough('App\Modifier', 'App\ItemModifierGroup', 'item_id', 'modifier_group_id', 'id', 'modifier_group_id');
     }
 
 }

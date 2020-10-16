@@ -1,41 +1,50 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
-        @foreach (['danger', 'warning', 'success', 'info'] as $message)
-            @if(Session::has($message))
-                <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-            @endif
-        @endforeach
-    </div>
-</div>
-@include('truck.menu._partials.navtabs')
-<div class="container">
-    <div class="page-header">
-        <h1>Create Item</h1>
-    </div>
+@extends('truck.layouts.admin.layout')
 
-    <div class="row">
-        <div class="col-sm-24 col-md-12">
+@section('content')
 
-            <form action="{{ route('truck.menu.item.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-                @csrf
-                <div class="form-group @error('name') has-error @enderror">
-                    <label for="">Item name</label>
-                    <input name="name" type="text" class="form-control" value="{{ old('name') }}" autocomplete="false" required>
-                    @error('name')
-                    <div class="help-block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </div>
-                    @enderror
+    @foreach (['danger', 'warning', 'success', 'info'] as $message)
+        @if(Session::has($message))
+            <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
+        @endif
+    @endforeach
+
+    @include('truck.menu._partials.navtabs')
+
+    <form action="{{ route('truck.menu.item.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+        @csrf
+        <div class="meta-header">
+            <div class="meta-inner">
+                <a href="{{ route('truck.menu.item.index') }}" class="back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </a>
+                <div class="meta-buttons">
+                    <button class="btn btn-primary">Save</button>
                 </div>
+            </div>
+            <div class="form-group form-group--title @error('name') has-error @enderror">
+                <input name="name" type="text" class="form-control form-control" value="{{ old('name') }}"
+                       autocomplete="false" placeholder="Item name" required>
+                @error('name')
+                <div class="help-block" role="alert">
+                    <strong>{{ $message }}</strong>
+                </div>
+                @enderror
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-16">
                 <div class="form-group @error('category_id') has-error @enderror">
                     <label for="">Category</label>
                     <select name="category_id" class="form-control">
-                        <option value=""></option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
+                        @if(count($categories) > 0)
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        @else
+                            <option disabled="disabled">Please create a category first.</option>
+                        @endif
                     </select>
                     @error('category_id')
                     <div class="help-block" role="alert">
@@ -70,9 +79,7 @@
                     </div>
                     @enderror
                 </div>
-                <button class="btn btn-primary">Save</button>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-@include('truck.layouts.client.footer')
+    </form>
+@endsection

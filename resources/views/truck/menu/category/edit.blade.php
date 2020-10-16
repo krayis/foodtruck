@@ -1,47 +1,56 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
-        @foreach (['danger', 'warning', 'success', 'info'] as $message)
-            @if(Session::has($message))
-                <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-            @endif
-        @endforeach
-    </div>
-</div>
-@include('truck.menu._partials.navtabs')
-<div class="container">
-    <div class="page-header">
-        <h1>Update Category</h1>
-    </div>
-    <div class="row">
-        <div class="col-sm-24 col-md-12">
+@extends('truck.layouts.admin.layout')
 
-                <form action="{{ route('truck.menu.category.update', $category->id) }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <div class="form-group @error('name') has-error @enderror">
-                        <label for="">Category Name</label>
-                        <input name="name" type="text" class="form-control" value="{{ $category->name }}" required>
-                        @error('name')
-                        <div class="help-block" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group @error('description') has-error @enderror">
-                        <label for="">Description</label>
-                        <textarea name="description" class="form-control">{{ $category->description }}</textarea>
-                        @error('description')
-                        <div class="help-block" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @enderror
-                    </div>
+@section('content')
+    @include('truck.menu._partials.navtabs')
+    <form action="{{ route('truck.menu.category.update', $category->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <div class="meta-header">
+            <div class="meta-inner">
+                <a href="{{ route('truck.menu.category.index') }}" class="back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </a>
+                <div class="meta-buttons">
+                    <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
+                    </button>
                     <button class="btn btn-primary">Save</button>
-                </form>
-
+                </div>
+            </div>
+            <div class="form-group form-group--lg @error('name') has-error @enderror">
+                <input name="name" type="text" class="form-control form-control--title" placeholder="Category name"
+                       value="{{ $category->name }}"
+                       required>
+                @error('name')
+                <div class="help-block" role="alert">
+                    <strong>{{ $message }}</strong>
+                </div>
+                @enderror
+            </div>
         </div>
-    </div>
-</div>
-@include('truck.layouts.client.footer')
+        <div class="row">
+            <div class="col-md-16">
+                <div class="form-group @error('description') has-error @enderror">
+                    <label for="">Description</label>
+                    <textarea name="description" class="form-control">{{ $category->description }}</textarea>
+                    @error('description')
+                    <div class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    </form>
+    <form action="{{ route('truck.menu.category.destroy', $category->id) }}" id="delete-form" style="display: none;" method="POST">
+        @csrf
+        @method('DELETE')
+    </form>
+    <script>
+        $('[data-action="delete"]').on('click', function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to delete?')) {
+                $('#' + $(this).data('target')).submit();
+            }
+        });
+    </script>
+@endsection

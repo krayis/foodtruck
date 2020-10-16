@@ -1,13 +1,14 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
 
-<div class="container">
+
     <div class="page-header">
         <h1 class="mt-0">Order Throttling</h1>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-24 col-md-12">
             <p>Throttle orders to control how many can come in a certain time period.</p>
             <form action="{{ route('truck.settings.throttle.update', $user->id) }}" method="POST">
                 @csrf
@@ -81,7 +82,7 @@
             </form>
         </div>
     </div>
-</div>
+
 <script>
     var typeInputs = $('[name="throttle_type"]');
     var $timeSlot = $('#view-time-slot');
@@ -102,4 +103,4 @@
         }
     });
 </script>
-@include('truck.layouts.admin.footer')
+@endsection

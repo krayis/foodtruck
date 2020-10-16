@@ -1,46 +1,48 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
-        @foreach (['danger', 'warning', 'success', 'info'] as $message)
-            @if(Session::has($message))
-                <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-            @endif
-        @endforeach
-    </div>
-</div>
+@extends('truck.layouts.admin.layout')
+
+@section('content')
+
 @include('truck.menu._partials.navtabs')
-<div class="container">
-    <div class="page-header">
-        <h1>Update Modifier</h1>
+
+<form action="{{ route('truck.menu.modifier.update', $modifier->id) }}" method="POST"
+      enctype="multipart/form-data" autocomplete="off">
+    @csrf
+    @method('PATCH')
+
+    <div class="meta-header">
+        <div class="meta-inner">
+            <a href="{{ route('truck.menu.modifier.index') }}" class="back">
+                <ion-icon name="arrow-back"></ion-icon>
+            </a>
+            <div class="meta-buttons">
+                <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
+                </button>
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <div class="form-group--title  @error('name') has-error @enderror">
+            <input name="name" type="text" class="form-control" value="{{ $modifier->name }}"
+                   autocomplete="false" placeholder="Name" required>
+            @error('name')
+            <div class="help-block" role="alert">
+                <strong>{{ $message }}</strong>
+            </div>
+            @enderror
+        </div>
     </div>
+
 
     <div class="row">
-        <div class="col-sm-24 col-md-12">
-
-            <form action="{{ route('truck.menu.modifier.update', $modifier->id) }}" method="POST"
-                  enctype="multipart/form-data" autocomplete="off">
-                @csrf
-                @method('PATCH')
-                <div class="form-group @error('name') has-error @enderror">
-                    <label for="">Modifier name</label>
-                    <input name="name" type="text" class="form-control" value="{{ $modifier->name }}"
-                           autocomplete="false" required>
-                    @error('name')
-                    <div class="help-block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </div>
-                    @enderror
-                </div>
+        <div class="col-sm-24 col-md-15">
                 <div class="form-group @error('category_id') has-error @enderror">
-                    <label for="">Modifier category</label>
-                    <select name="modifier_category_id" class="form-control">
+                    <label for="">Modifier group</label>
+                    <select name="modifier_group_id" class="form-control">
                         @foreach($categories as $category)
                             <option
-                                value="{{ $category->id }}" {{$modifier->modifier_category_id == $category->id ? 'selected' : null}}>{{ $category->name }}</option>
+                                value="{{ $category->id }}" {{$modifier->modifier_group_id == $category->id ? 'selected' : null}}>{{ $category->name }}</option>
                         @endforeach
                     </select>
-                    @error('modifier_category_id')
+                    @error('modifier_group_id')
                     <div class="help-block" role="alert">
                         <strong>{{ $message }}</strong>
                     </div>
@@ -89,7 +91,7 @@
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="">Maximal</label>
+                                <label for="">Maximum</label>
                                 <select class="form-control js-quantity-selection" name="max">
                                     @for($i = 1; $i<=50; $i++)
                                         <option
@@ -105,11 +107,9 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary">Save</button>
-            </form>
         </div>
     </div>
-</div>
+</form>
 <script>
     var typeInputs = $('[name="type"]');
     typeInputs.on('change', function () {
@@ -119,4 +119,4 @@
         }
     });
 </script>
-@include('truck.layouts.client.footer')
+@endsection

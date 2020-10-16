@@ -1,8 +1,14 @@
 @import 'bootstrap';
 
 body {
-    padding-top: 80px;
     background: #ffffff;
+}
+
+hr {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border: 0;
+    border-top: 1px solid $hr-border;
 }
 
 .inline-block {
@@ -26,9 +32,9 @@ body {
 
 .page-header {
     position: relative;
-    margin: 0;
     border-bottom: none;
-    padding: 15px 0;
+    padding: 0;
+    margin: 0 0 15px;
 
     h1 {
         margin: 0;
@@ -37,7 +43,15 @@ body {
     .page-action {
         position: absolute;
         right: 0;
-        top: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .history-back {
+        font-size: 32px;
+        position: relative;
+        left: -5px;
+        top: 5px;
     }
 
 }
@@ -56,6 +70,7 @@ td.gutter-right-0 {
 
     a {
         color: #129d58;
+        font-weight: bold;
     }
 }
 
@@ -99,11 +114,13 @@ td.gutter-right-0 {
 
     li.category {
         margin-bottom: 45px;
+
         .card--item {
             padding: 0 5px;
             width: 50%;
             margin-bottom: 10px;
         }
+
         .card--item-content {
             background: #ffffff;
             padding: 10px;
@@ -115,9 +132,11 @@ td.gutter-right-0 {
             flex-direction: column;
             height: 100%;
             padding-bottom: 35px;
+
             &:hover {
                 border: 1px solid darken(#dbdce0, 20%);
             }
+
             .card--item-header {
                 font-size: 16px;
                 font-weight: bold;
@@ -175,6 +194,7 @@ td.gutter-right-0 {
     background-color: #ffffff;
     position: absolute;
     display: none;
+
     &.ui-autocomplete {
         list-style-type: none;
         border: 1px solid #dbdce0;
@@ -182,9 +202,11 @@ td.gutter-right-0 {
         margin: 0;
         padding: 0;
         max-width: 100%;
+
         li {
             padding: 2px 10px;
             cursor: pointer;
+
             &:hover {
                 background: $brand-primary;
                 color: #ffffff;
@@ -197,18 +219,21 @@ td.gutter-right-0 {
         width: 17em;
         padding: .2em .2em 0;
         border-radius: 3px;
+
         .ui-datepicker-title {
             margin: 0 2.3em;
             line-height: 1.8em;
             text-align: center;
             position: relative;
         }
+
         table {
             width: 100%;
             font-size: .9em;
             border-collapse: collapse;
             margin: 0 0 .4em;
             text-align: center;
+
             th {
                 padding: .7em .3em;
                 text-align: center;
@@ -234,12 +259,14 @@ td.gutter-right-0 {
                 color: #ffffff;
                 border-radius: 2px;
             }
+
             .ui-state-hover {
                 background: #f0f0f0;
                 border-radius: 2px;
             }
         }
     }
+
     .ui-icon {
         text-indent: -99999px;
         overflow: hidden;
@@ -247,6 +274,7 @@ td.gutter-right-0 {
         height: 16px;
         display: block;
     }
+
     .ui-datepicker-prev,
     .ui-datepicker-next {
         width: 28px;
@@ -256,6 +284,7 @@ td.gutter-right-0 {
         cursor: pointer;
         padding: 2px;
         top: 0;
+
         > span {
             display: block;
             position: absolute;
@@ -268,13 +297,16 @@ td.gutter-right-0 {
 
     .ui-datepicker-prev {
         left: 0;
-        > span{
+
+        > span {
             background-size: 16px;
             background-image: url('/images/icons/chevron-back.svg');
         }
     }
+
     .ui-datepicker-next {
         right: 0;
+
         > span {
             background-size: 16px;
             background-image: url('/images/icons/chevron-forward.svg');
@@ -298,17 +330,31 @@ td.gutter-right-0 {
 
 .nav {
     &.nav-tabs {
+        border-bottom: none;
+        padding: 0 30px;
         li {
+            margin-left: 12px;
+            margin-right: 12px;
             a {
-                color: lighten(#000000, 45%);
+                padding-left: 0;
+                padding-right: 0;
+                color: rgba(0,0,0,.4);
+                font-weight: 500;
+                font-size: 14px;
+                border: none;
+                border-bottom: 2px solid transparent;
+                &:hover {
+                    color: #000000;
+                }
             }
         }
 
         > li.active {
             a {
-                color: $brand-primary;
+                color: #000000;
                 border: none;
                 border-bottom: none;
+                border-bottom: 2px solid $brand-primary;
             }
         }
     }
@@ -342,15 +388,6 @@ td.gutter-right-0 {
 
 }
 
-
-input[type=radio] {
-    margin-top: 0;
-}
-
-input[type=checkbox] {
-    margin-top: 2px;
-}
-
 .form--cut-off {
     .form-group {
         margin-right: 10px;
@@ -361,6 +398,7 @@ input[type=checkbox] {
 .card--cut-off {
     padding: 10px;
     border-bottom: 1px solid $table-border-color;
+
     h3 {
         margin: 0 0 5px;
         font-weight: 400;
@@ -371,28 +409,35 @@ input[type=checkbox] {
 .cursor-pointer {
     cursor: pointer;
 }
+
 .cursor-move {
     cursor: move;
 }
+
 .cursor-grab {
     cursor: grab;
 }
+
 .table-icon {
     display: inline-block;
+
     ion-icon {
         display: block;
     }
 }
+
 .table-condensed {
     .table-icon-padding {
         padding: $table-condensed-cell-padding;
     }
 }
+
 .table-icon-padding {
     padding: $table-cell-padding;
 }
+
 .pd-0 {
-    padding: 0!important;
+    padding: 0 !important;
 }
 
 
@@ -418,6 +463,7 @@ ion-icon {
     .ios-arrow-down {
         font-size: 12px;
     }
+
     li.open > a {
         border: none;
         color: $brand-primary;
@@ -448,13 +494,297 @@ ion-icon {
         margin: 0;
         padding: 0 0 0 15px;
         list-style-type: disc;
+
         li {
             font-size: 14px;
             color: #6b6b83;
             padding: 0;
+
             &:last-child {
                 border-bottom: none;
             }
         }
     }
+}
+
+
+.navbar-fixed-top {
+    border: 0;
+}
+
+
+.main {
+    padding: 45px;
+
+    .content {
+        padding: 20px;
+    }
+
+}
+
+@import '_sidebar';
+
+
+.nav-tabs--darker {
+    background: #fafafa;
+}
+
+.main {
+    .nav {
+            position: sticky;
+            margin: -45px -45px 30px;
+            top: 0;
+            z-index: 100;
+
+    }
+}
+
+
+.flash-alert {
+    margin: 15px 0;
+}
+
+.form-group--title {
+    margin-bottom: 30px;
+
+    .form-control {
+        font-weight: 700;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        border-radius: 0;
+        padding: 8px 0;
+        font-size: 32px;
+        height: auto;
+        background: transparent;
+        border-bottom-width: 2px;
+
+        &:focus {
+            outline: 0;
+            box-shadow: none;
+        }
+    }
+}
+
+.meta-header {
+    position: sticky;
+    padding: 0 45px 0 45px;
+    margin: 0 -45px;
+    top: 54px;
+    background: #ffffff;
+    z-index: 100;
+
+    .back {
+        font-size: 32px;
+        position: relative;
+        left: -5px;
+        top: 5px;
+    }
+
+    .meta-inner {
+        position: relative;
+
+        .meta-buttons {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+
+            button {
+                margin-right: 10px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+}
+
+
+.has-error {
+    .form-control {
+        box-shadow: none;
+    }
+}
+
+
+.btn {
+    ion-icon {
+        top: 3px;
+        margin-right: 5px;
+    }
+}
+
+
+ul.group-modifier-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+        border: 1px solid rgb(224, 224, 224);
+        padding: 12px 12px 12px 52px;
+        background: #ffffff;
+
+        .inner {
+            position: relative;
+        }
+
+        .reorder {
+            cursor: move;
+            padding: 5px;
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            display: block;
+            transform: translateY(-50%);
+        }
+
+        .more {
+            cursor: pointer;
+            padding: 5px;
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            display: block;
+            transform: translateY(-50%);
+        }
+
+        .open {
+            .dropdown-menu {
+                left: auto;
+                right: 20px;
+                top: 0;
+            }
+        }
+    }
+}
+
+.table {
+
+    tr {
+        td:first-child {
+            > a {
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.leading {
+    color: rgba(0,0,0, .55);
+}
+.radio-input-inline, .checkbox-input-inline {
+    input[type="radio"] {
+        top: 8px;
+    }
+    input[type="checkbox"] {
+        top: 8px;
+    }
+    input[type="text"] {
+        display: inline-block;
+        width: auto;
+        margin-left: 15px;
+        width: 100px;
+    }
+}
+
+.label-helper {
+    margin: 5px 0;
+}
+
+
+.form-group--label-start {
+    margin-left: 30px;
+    margin-right: 15px;
+}
+
+.form-group--label-after {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.relative {
+    position: relative;
+}
+ul.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    > li.section {
+
+        .item {
+            border: 1px solid #e0e0e0;
+            padding: 20px 50px 20px 50px;
+            background: #ffffff;
+            .item-wrapper {
+                position: relative;
+            }
+        }
+
+        .reorder {
+            font-size: 24px;
+            cursor: move;
+            position: absolute;
+            left: -35px;
+            top: 50%;
+            display: block;
+            transform: translateY(-50%);
+            margin-top: -1px;
+            color: rgba(0,0,0, .25);
+            ion-icon {
+                top: 0;
+            }
+        }
+
+        .more {
+            cursor: pointer;
+            position: absolute;
+            right: -45px;
+            font-size: 24px;
+            top: 50%;
+            display: block;
+            transform: translateY(-50%);
+            margin-top: -1px;
+            > .dropdown {
+                > a {
+                    color: rgba(0,0,0, .25);
+                    ion-icon {
+                        top: 0;
+                    }
+                }
+            }
+        }
+
+        .open {
+            .dropdown-menu {
+                left: auto;
+                right: 20px;
+                top: 0;
+            }
+        }
+
+        > ul {
+            background: #f7f7f7;
+            padding: 20px 30px;
+            list-style-type: none;
+
+        }
+    }
+}
+.table {
+    &.table-align-vertical {
+        > tbody {
+            > tr {
+                >  td {
+                    vertical-align: middle;
+                }
+            }
+
+        }
+    }
+
 }

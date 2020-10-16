@@ -1,20 +1,19 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
+@extends('truck.layouts.admin.layout')
+
+@section('content')
+
         @foreach (['danger', 'warning', 'success', 'info'] as $message)
             @if(Session::has($message))
                 <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
             @endif
         @endforeach
-    </div>
-</div>
-<div class="container">
+
+
     <div class="page-header">
         <h1>Orders</h1>
 
     </div>
-    <div class="content">
+
         <table class="table">
             <thead>
             <tr>
@@ -56,7 +55,6 @@
             @endforeach
             </tbody>
         </table>
-    </div>
-</div>
 
-@include('truck.layouts.client.footer')
+
+@endsection

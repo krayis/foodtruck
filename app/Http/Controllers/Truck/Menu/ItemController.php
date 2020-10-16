@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Truck\Menu;
 
+use App\Modifier;
+use App\ModifierGroup;
 use Illuminate\Http\Request;
 use App\MenuCategory;
 use App\Item;
@@ -28,7 +30,7 @@ class ItemController extends Controller
         $items = Item::where([
             ['truck_id', $user->truck->id],
             ['deleted', 0],
-        ])->orderBy('sort_order', 'desc')->get();
+        ])->with('modifierGroups', 'category')->orderBy('sort_order', 'desc')->get();
         return view('truck.menu.item.index', compact('items', 'categories'));
     }
 
@@ -41,7 +43,7 @@ class ItemController extends Controller
 
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'min:1', 'max:255'],
             'description' => ['max:255'],
             'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -81,12 +83,16 @@ class ItemController extends Controller
     {
         $user = Auth::user();
         $categories = MenuCategory::where('truck_id', $user->truck->id)->orderBy('sort_order', 'asc')->get();
-        return view('truck.menu.item.edit', compact('item', 'categories'));
+        $modifierGroups = ModifierGroup::where([
+            ['truck_id', $user->truck->id],
+            ['deleted', 0],
+        ])->with('modifiers')->get();
+        return view('truck.menu.item.edit', compact('item', 'categories', 'modifierGroups'));
     }
 
     public function update(Request $request, Item $item)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
             'description' => ['max:255'],
             'price' => ['sometimes', 'required', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -104,7 +110,23 @@ class ItemController extends Controller
 
         $item->update($request->only(['name', 'price', 'description', 'category_id', 'active']));
 
-        return redirect()->route('truck.menu.item.index')->with('success', 'Item was successfully updated.');
+        $item->modifierGroups()->sync($request->input('modifier_groups'));
+
+        if (is_array($request->input('items'))) {
+            foreach ($request->input('items') as $category) {
+                ItemModifierGroup::where([
+                    'id' => $category['id']
+                ])->update([
+                    'sort_order' => $category['sort_order']
+                ]);
+            }
+        }
+
+        if ($request->input('out_of_stock')) {
+
+        }
+
+        return redirect()->route('truck.menu.item.edit', $item->id)->with('success', 'Item was successfully updated.');
     }
 
     public function destroy(Item $item)

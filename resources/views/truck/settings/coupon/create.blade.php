@@ -1,21 +1,30 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
-<div class="container">
+<form action="{{ route('truck.settings.coupons.store') }}" method="POST">
+    @csrf
+    <div class="meta-header">
+        <div class="meta-inner">
+            <a href="{{ route('truck.settings.coupons.index') }}" class="back">
+                <ion-icon name="arrow-back"></ion-icon>
+            </a>
+            <div class="meta-buttons">
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <div class="form-group--title">
+            <input type="text" class="form-control" name="code" value="{{ old('code') }}" placeholder="Coupon code" required/>
+            @error('code')
+            <div class="help-block" role="alert">
+                <strong>{{ $message }}</strong>
+            </div>
+            @enderror
+        </div>
+    </div>
+
     <div class="row">
-        <div class="col-sm-12">
-            <h1>Add Coupon</h1>
-            <form action="{{ route('truck.settings.coupons.store') }}" method="POST">
-                @csrf
-                <div class="form-group @error('code') has-error @enderror">
-                    <label for="">Coupon code</label>
-                    <input type="text" class="form-control" name="code" value="{{ old('code') }}" required/>
-                    @error('code')
-                    <div class="help-block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </div>
-                    @enderror
-                </div>
+        <div class="col-sm-24 col-md-15">
                 <div class="form-group @error('description') has-error @enderror">
                     <label for="">Coupon description</label>
                     <input type="text" class="form-control" name="description" value="{{ old('description') }}"/>
@@ -67,11 +76,9 @@
                     </div>
                     @enderror
                 </div>
-                <button class="btn btn-primary">Save</button>
-            </form>
         </div>
     </div>
-</div>
+</form>
 
 <script>
     var typeInputs = $('[name="type"]');
@@ -83,4 +90,4 @@
 
     });
 </script>
-@include('truck.layouts.admin.footer')
+@endsection

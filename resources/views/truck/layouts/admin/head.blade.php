@@ -16,3 +16,4 @@
     <link href="{{ asset('css/admin/styles.css') }}" rel="stylesheet">
 </head>
 <body class="{{ $bodyClass ?? '' }}">
+

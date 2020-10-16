@@ -1,72 +1,114 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
-        @foreach (['danger', 'warning', 'success', 'info'] as $message)
-            @if(Session::has($message))
-                <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-            @endif
-        @endforeach
-    </div>
-</div>
-@include('truck.menu._partials.navtabs')
-<div class="container">
-    <div class="page-header">
-        <h1>{{ $category->name }}</h1>
-        @if($category->description)
-            <p>{{ $category->description }}</p>
-        @endif
-    </div>
-    <div class="content">
-        <table class="table">
-            <thead>
-            <tr>
-                <th width="1%"></th>
-                <th>Item Name</th>
-                <th>Description</th>
-                <th width="1%">Price</th>
-            </tr>
-            </thead>
-            <tbody id="sortable">
-            @foreach($category->items as $item)
-                <tr data-item-id="{{$item->id}}" data-sort-order="{{$item->sort_order}}">
-                    <td class="pd-0" width="1%">
-                        <span class="handle table-icon table-icon-padding cursor-grab">
-                            <ion-icon name="ios-reorder"></ion-icon>
+@extends('truck.layouts.admin.layout')
+
+@section('content')
+
+    @include('truck.menu._partials.navtabs')
+    <form action="{{ route('truck.menu.category.update', $category->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <div class="meta-header">
+            <div class="meta-inner">
+                <a href="{{ route('truck.menu.category.index') }}" class="back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </a>
+                <div class="meta-buttons">
+                    <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
+                    </button>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            <div class="form-group form-group--title @error('name') has-error @enderror">
+                <input name="name" type="text" class="form-control" placeholder="Category name"
+                       value="{{ $category->name }}"
+                       required>
+                @error('name')
+                <div class="help-block" role="alert">
+                    <strong>{{ $message }}</strong>
+                </div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-16">
+                <div class="form-group @error('description') has-error @enderror">
+                    <label for="">Description</label>
+                    <textarea name="description" class="form-control" rows="3">{{ $category->description }}</textarea>
+                    @error('description')
+                    <div class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-16">
+                <h3>Items</h3>
+                @if($category->items()->exists())
+                    <ul class="group-modifier-list" id="sortable">
+                        @foreach($category->items as $key => $item)
+                            <li data-key="{{$key}}">
+                                <div class="inner">
+                                    <div class="reorder">
+                                        <ion-icon name="reorder"></ion-icon>
+                                    </div>
+                                    <div>
+                                        {{ $item->name }}
+                                    </div>
+                                    <span class="more">
+                                    <div class="dropdown">
+                                        <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <ion-icon name="more"></ion-icon>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                            <li>
+                                                <a href="{{ route('truck.menu.item.edit', $item->id ) }}">
+                                                    Remove
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('truck.menu.item.edit', $item->id ) }}">Edit Item
+                                                </a>
+                                            </li>
+                                        </ul>
+                             </div>
                         </span>
-                    </td>
-                    <td width="1%" class="white-space--nowrap">{{ $item->name }}</td>
-                    <td>{{ $item->description }}</td>
-                    <td>${{ $item->price }}</td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-<script>
-    var $table = $( "#sortable" );
-    $table.sortable({
-        helper: function(e, ui) {
-            ui.children().each(function() {
-                $(this).width($(this).width());
-            });
-            return ui;
-        } ,
-        handle: '.handle',
-        stop: function(evt, ui) {
-            var sortOrder = ui.item.prev().length ? parseInt(ui.item.prev().data('sort-order')) - 1 : parseInt(ui.item.next().data('sort-order')) + 1;
-            var data = {
-                id: ui.item.data('item-id'),
-                sort_order: sortOrder,
-                _token: '{{ csrf_token() }}',
-            };
-            var request = $.ajax({
-                method: 'POST',
-                url: '{{ route('truck.menu.category.item@sortItem', $category->id) }}',
-                data: data
-            });
-        }
-    });
-</script>
-@include('truck.layouts.client.footer')
+                                </div>
+
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    No items added
+                @endif
+            </div>
+        </div>
+    </form>
+    <form action="{{ route('truck.menu.category.destroy', $category->id) }}" id="delete-form" style="display: none;"
+          method="POST">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        var $list = $("#sortable");
+        $list.sortable({
+            handle: '.reorder',
+            stop: function (evt, ui) {
+                $list.find('> li').each(function (i, item) {
+                    var $item = $(item);
+                    $item.find('[name="items[' + $item.data('key') + '][sort_order]"]').val(i);
+                });
+
+            }
+        });
+        $('[data-action="delete"]').on('click', function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to delete?')) {
+                $('#' + $(this).data('target')).submit();
+            }
+        });
+    </script>
+@endsection

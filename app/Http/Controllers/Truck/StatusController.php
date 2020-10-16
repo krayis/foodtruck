@@ -13,6 +13,7 @@ use DateTimeZone;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Event;
+use App\EventType;
 
 class StatusController extends Controller
 {
@@ -31,24 +32,12 @@ class StatusController extends Controller
         $now = $now + ((30 - ($minutes % 15)) * 60);
         $range = range($now, strtotime("24:00"), 15 * 60);
 
-        $zone = Zone::where([
-            'zone_name' => $user->timezone
-        ])->first();
-
-        $timezone = Timezone::where([
-                ['zone_id', $zone->zone_id],
-                ['time_start', '<=', DB::raw('UNIX_TIMESTAMP(UTC_TIMESTAMP())')],
-            ])
-            ->orderBy('time_start', 'DESC')
-            ->first();
-
-        $offset = gmdate("h:i", abs($timezone->gmt_offset));
-        $offset = $timezone->gmt_offset < 0 ? '-' . $offset : '+' . $offset;
+        $offset = $user->tz->gmtOffset();
 
         $locations = Location::where([
             'user_id' => $user->id,
             'deleted' => 0,
-            'location_type_id' => 1,
+            'location_type_id' => EventType::TEMPORARY,
         ])->get();
 
         $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'event_type_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
@@ -65,7 +54,7 @@ class StatusController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $validate = $request->validate([
+        $request->validate([
             'location_id' => ['required_if:location_type_id,1'],
             'end_date_time' => ['required', 'date_format:Y-m-d H:i:s'],
             'location_type_id' => ['required', 'in:1,2,3'],
@@ -111,14 +100,15 @@ class StatusController extends Controller
         }
 
         $endDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->input('end_date_time'), $user->timezone);
+        $startDateTime = Carbon::now($user->timezone)->sub('1 minute');
 
         Event::create([
             'user_id' => $user->id,
             'truck_id' => $user->truck->id,
             'location_id' => $locationId,
-            'start_date_time' => Date('Y-m-d H:i:s'),
+            'start_date_time' => $startDateTime->tz('UTC')->format('Y-m-d H:i:s'),
             'end_date_time' => $endDateTime->tz('UTC')->format('Y-m-d H:i:s'),
-            'event_type_id' => 2
+            'event_type_id' => EventType::TEMPORARY
         ]);
         return redirect()->route('truck.status.index')->with('success', 'You have successfully updated your status.');
     }
@@ -127,8 +117,9 @@ class StatusController extends Controller
     {
         $user = Auth::user();
         if (strtotime($status->start_date_time) <= time() && time() <= strtotime($status->end_date_time)) {
+            $endDateTime = Carbon::now($user->timezone);
             $status->update([
-                'end_date_time' => date('Y-m-d H:i:s', strtotime($status->start_date_time) - 30)
+                'end_date_time' => $endDateTime->sub('1 minutes')->tz('UTC')->format('Y-m-d H:i:s')
             ]);
         }
         return redirect()->route('truck.status.index')->with('success', 'You have successfully updated your status.');

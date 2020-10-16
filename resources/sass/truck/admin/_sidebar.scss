@@ -1,0 +1,78 @@
+.sidebar {
+    display: none;
+    padding: 15px 0;
+    .nav-sidebar {
+        > li {
+            > a {
+                font-weight: 500;
+                padding: 2px 30px;
+                margin-bottom: 12px;
+                color: rgba(0,0,0, .55);
+                border-left: 4px solid transparent;
+                ion-icon {
+                    margin-right: 10px;
+                    top: 3px;
+                }
+                &:hover {
+                    color: rgba(0,0,0, .85);
+                }
+
+            }
+            &.active {
+                > a {
+                    color: $brand-primary;
+                    border-left: 4px solid $brand-primary;
+                }
+            }
+
+        }
+    }
+    .active {
+        .nav {
+            padding: 0;
+            > li {
+                > a {
+                    padding: 10px 45px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #ffffff;
+        border-right: 1px solid #e3e3e3;
+    }
+}
+
+.nav-sidebar {
+    margin: 0;
+}
+.nav-sidebar > li > a {
+    padding-right: 45px;
+    padding-left: 45px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+}
+
+
+.nav-sidebar {
+    .nav-brand {
+        padding: 16px 30px;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: .2px;
+    }
+}

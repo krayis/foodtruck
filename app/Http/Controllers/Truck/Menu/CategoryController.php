@@ -65,13 +65,24 @@ class CategoryController extends Controller
 
     public function update(Request $request, MenuCategory $category)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
             'active' => ['in:0,1'],
             'description' => ['max:255'],
         ]);
+        $user = Auth::user();
         $category->update($request->only(['name', 'description', 'active']));
-        return redirect()->route('truck.menu.category.index')->with('success', 'Category was successfully updated.');
+        if (is_array($request->input('items'))) {
+            foreach ($request->input('items') as $item) {
+                Item::where([
+                    'id' => $item['id'],
+                    'user_id' => $user->id,
+                ])->update([
+                    'sort_order' => $item['sort_order']
+                ]);
+            }
+        }
+        return redirect()->route('truck.menu.category.show', $category->id)->with('success', 'Category was successfully updated.');
     }
 
     public function destroy(MenuCategory $category)
@@ -84,45 +95,8 @@ class CategoryController extends Controller
         ])->update([
             'category_id' => null
         ]);
-        return redirect()->back()->with('success', 'Category was successfully deleted.');
+        return redirect()->route('truck.menu.category.index')->with('success', 'Category was successfully deleted.');
     }
 
-    public function sortItem(Request $request, MenuCategory $category)
-    {
-        $id = $request->input('id');
-        $sortOrder = $request->input('sort_order');
-        Item::where([
-            ['category_id', $category->id],
-            ['sort_order', '<=', $sortOrder],
-        ])->update([
-            'sort_order' => DB::raw('sort_order - 1'),
-        ]);
-        Item::where([
-            'id' => $id
-        ])->update([
-            'sort_order' => $sortOrder
-        ]);
-        return response()->json([]);
-    }
 
-    public function sortCategory(Request $request)
-    {
-        $id = $request->input('id');
-        $sortOrder = $request->input('sort_order');
-        $user = Auth::user();
-
-        MenuCategory::where([
-            ['user_id', $user->id],
-            ['deleted', 0],
-            ['sort_order', '<=', $sortOrder],
-        ])->update([
-            'sort_order' => DB::raw('sort_order - 1'),
-        ]);
-        MenuCategory::where([
-            'id' => $id
-        ])->update([
-            'sort_order' => $sortOrder
-        ]);
-        return response()->json([]);
-    }
 }

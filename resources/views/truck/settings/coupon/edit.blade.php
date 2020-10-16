@@ -1,22 +1,32 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
-<div class="container">
+<form action="{{ route('truck.settings.coupons.update', $coupon->id) }}" method="POST">
+    @csrf
+    @method('PATCH')
+<div class="meta-header">
+    <div class="meta-inner">
+        <a href="{{ route('truck.settings.coupons.index') }}" class="back">
+            <ion-icon name="arrow-back"></ion-icon>
+        </a>
+        <div class="meta-buttons">
+            <button class="btn btn-primary">Save</button>
+        </div>
+    </div>
+    <div class="form-group--title @error('code') has-error @enderror">
+        <input type="text" class="form-control" name="code" value="{{ $coupon->code }}" placeholder="Coupon code" required/>
+        @error('code')
+        <div class="help-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </div>
+        @enderror
+    </div>
+</div>
+
     <div class="row">
-        <div class="col-sm-12">
-            <h1>Edit Coupon</h1>
-            <form action="{{ route('truck.settings.coupons.update', $coupon->id) }}" method="POST">
-                @csrf
-                @method('PATCH')
-                <div class="form-group @error('code') has-error @enderror">
-                    <label for="">Coupon code</label>
-                    <input type="text" class="form-control" name="code" value="{{ $coupon->code }}" required/>
-                    @error('code')
-                    <div class="help-block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </div>
-                    @enderror
-                </div>
+        <div class="col-sm-24 col-md-15">
+
                 <div class="form-group @error('description') has-error @enderror">
                     <label for="">Coupon description</label>
                     <input type="text" class="form-control" name="description" value="{{ $coupon->description }}"/>
@@ -68,11 +78,9 @@
                     </div>
                     @enderror
                 </div>
-                <button class="btn btn-primary">Save</button>
-            </form>
         </div>
     </div>
-</div>
+</form>
 <script>
     var typeInputs = $('[name="type"]');
     typeInputs.on('change', function () {
@@ -83,4 +91,4 @@
 
     });
 </script>
-@include('truck.layouts.admin.footer')
+@endsection

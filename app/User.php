@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -46,5 +47,13 @@ class User extends Authenticatable
     public function paymentProvider()
     {
         return $this->hasOne('App\UserPaymentProvider');
+    }
+
+    public function zone() {
+        return $this->hasOne('App\Zone', 'zone_name', 'timezone');
+    }
+
+    public function tz() {
+        return $this->hasOneThrough('App\Timezone', 'App\Zone', 'zone_name', 'zone_id', 'timezone', 'zone_id')->where('time_start', '<=', DB::raw('UNIX_TIMESTAMP(UTC_TIMESTAMP())'))->orderBy('time_start', 'DESC');
     }
 }

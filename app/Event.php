@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use DateTimeZone;
+use DateTime;
 
 class Event extends Model
 {
@@ -25,5 +27,19 @@ class Event extends Model
     public function truck()
     {
         return $this->belongsTo('App\Truck');
+    }
+
+    public function startDateTime($tz) {
+        $datetime = new DateTime($this->start_date_time);
+        $timezone = new DateTimeZone($tz);
+        $datetime->setTimezone($timezone);
+        return $datetime;
+    }
+
+    public function endDateTime($tz) {
+        $datetime = new DateTime($this->end_date_time);
+        $timezone = new DateTimeZone($tz);
+        $datetime->setTimezone($timezone);
+        return $datetime;
     }
 }

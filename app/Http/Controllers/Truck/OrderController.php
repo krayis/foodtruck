@@ -44,9 +44,7 @@ class OrderController extends Controller
 
         $offset = gmdate("h:i", abs($timezone->gmt_offset));
         $offset = $timezone->gmt_offset < 0 ? '-' . $offset : '+' . $offset;
-
-        $orders = Order::select('*', DB::raw("CONVERT_TZ(pickup_at, '+00:00' , '". $offset ."') as pickup_at"))->orderBy('pickup_at', 'desc')->get();
-
+        $orders = Order::select('*', DB::raw("CONVERT_TZ(pickup_at, '+00:00' , '". $offset ."') as pickup_at"))->with('items', 'items.modifiers')->orderBy('pickup_at', 'desc')->get();
         return view('truck.order.index', compact('orders'));
     }
 }

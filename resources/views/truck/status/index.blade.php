@@ -1,6 +1,7 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
+@extends('truck.layouts.admin.layout')
+
+@section('content')
+
     <div class="page-header">
         <h1>Status</h1>
     </div>
@@ -131,7 +132,7 @@
             <div id="map" class="map" style="height: 500px; border-radius: 3px; overflow: hidden"></div>
         </div>
     </div>
-</div>
+
 <input type="hidden" name="saved_location_id" value="{{ $event !== null ? $event->location->id : null }}"/>
 <script>
     var locations = {!! $locations->toJson() !!};
@@ -247,4 +248,4 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{config('app.google_api_key')}}&callback=initMap"
         async></script>
-@include('truck.layouts.client.footer')
+@endsection

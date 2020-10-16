@@ -13,6 +13,6 @@ class MenuCategory extends Model
     ];
 
     public function items() {
-        return $this->hasMany('App\Item', 'category_id')->orderBy('sort_order', 'desc');
+        return $this->hasMany('App\Item', 'category_id')->orderBy('sort_order', 'asc');
     }
 }

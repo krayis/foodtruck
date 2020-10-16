@@ -1,13 +1,14 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
 
-<div class="container">
+
     <div class="page-header">
         <h1 class="mt-0">Alert Notifications</h1>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-24 col-md-12">
             <p>You will copied on all customers emails as orders are received.</p>
             <form action="{{ route('truck.settings.alerts.update', $user->id) }}" method="POST">
                 @csrf
@@ -24,6 +25,6 @@
             </form>
         </div>
     </div>
-</div>
 
-@include('truck.layouts.admin.footer')
+
+@endsection

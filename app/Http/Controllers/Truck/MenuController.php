@@ -10,26 +10,43 @@ use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         $user = Auth::user();
         $categories = MenuCategory::where('truck_id', $user->truck->id)->orderBy('sort_order', 'asc')->get();
         return view('truck/menu/index', compact('categories'));
+    }
+
+    public function store(Request $request) {
+        $user = Auth::user();
+        if (is_array($request->input('items'))) {
+            foreach ($request->input('items') as $item) {
+                Item::where([
+                    'id' => $item['id'],
+                    'user_id' => $user->id,
+                ])->update([
+                    'sort_order' => $item['sort_order']
+                ]);
+            }
+        }
+        if (is_array($request->input('categories'))) {
+            foreach ($request->input('categories') as $category) {
+                MenuCategory::where([
+                    'id' => $category['id'],
+                    'user_id' => $user->id,
+                ])->update([
+                    'sort_order' => $category['sort_order']
+                ]);
+            }
+        }
+        return redirect()->route('truck.menu.index')->with('success', 'Menu was successfully updated.');
+
     }
 
 }

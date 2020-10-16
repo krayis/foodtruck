@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use App\ModifierCategory;
+use App\ModifierGroup;
 use App\Modifier;
 
 class ModifierController extends Controller
@@ -26,14 +26,14 @@ class ModifierController extends Controller
         $modifiers = Modifier::where([
             ['truck_id', $user->truck->id],
             ['deleted', 0],
-        ])->orderBy('sort_order', 'desc')->get();
+        ])->with('group')->orderBy('sort_order', 'desc')->get();
         return view('truck.menu.modifier.index', compact( 'modifiers'));
     }
 
     public function create()
     {
         $user = Auth::user();
-        $categories = ModifierCategory::where([
+        $categories = ModifierGroup::where([
             ['truck_id', $user->truck->id],
             ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
@@ -45,7 +45,7 @@ class ModifierController extends Controller
         $validate = $request->validate([
             'name' => ['required', 'string', 'min:1', 'max:255'],
             'type' => ['required', 'in:0,1'],
-            'modifier_category_id' => ['required'],
+            'modifier_group_id' => ['required'],
             'min' => ['nullable', 'required_if:type,1', 'integer'],
             'max' => ['nullable', 'required_if:type,1', 'integer'],
             'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -57,7 +57,7 @@ class ModifierController extends Controller
         Modifier::create([
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
-            'modifier_category_id' => $request->input('modifier_category_id'),
+            'modifier_group_id' => $request->input('modifier_group_id'),
             'type' => $request->input('type'),
             'name' => $request->input('name'),
             'price' => $request->input('price'),
@@ -72,7 +72,7 @@ class ModifierController extends Controller
     public function edit(Modifier $modifier)
     {
         $user = Auth::user();
-        $categories = ModifierCategory::where([
+        $categories = ModifierGroup::where([
             ['truck_id', $user->truck->id],
             ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
@@ -84,26 +84,17 @@ class ModifierController extends Controller
         $validate = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
             'type' => ['sometimes', 'required', 'in:0,1'],
-            'modifier_category_id' => ['sometimes', 'required'],
+            'modifier_group_id' => ['sometimes', 'required'],
             'min' => ['nullable', 'required_if:type,1', 'integer'],
             'max' => ['nullable', 'required_if:type,1', 'integer'],
             'price' => ['sometimes', 'required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'active' => ['in:0,1']
         ]);
 
-        $modifier->update($request->only('name', 'type', 'modifier_category_id', 'min', 'max', 'price', 'active'));
+        $modifier->update($request->only('name', 'type', 'modifier_group_id', 'min', 'max', 'price', 'active'));
         return redirect()->back()->with('success', 'Modifier was successfully updated.');
     }
 
-    public function overview()
-    {
-        $user = Auth::user();
-        $categories = ModifierCategory::where([
-            ['truck_id', $user->truck->id],
-            ['deleted', 0],
-        ])->orderBy('name', 'asc')->get();
-        return view('truck.menu.modifier.overview', compact('categories'));
-    }
 
     public function destroy(Modifier $modifier)
     {

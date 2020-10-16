@@ -119,7 +119,7 @@ class CheckoutController extends Controller
 
             $count = 0;
 
-            foreach ($item->modifierCategories as $modifierCategory) {
+            foreach ($item->modifierGroups as $modifierCategory) {
                 if ($modifierCategory->modifier_category_type_id === 1) {
                     foreach ($orderItemModifiers as $orderItemModifier) {
                         if ($orderItemModifier['category_id'] == $modifierCategory->id) {

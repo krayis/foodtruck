@@ -65,7 +65,7 @@ class ItemController extends Controller
             ],
         ];
 
-        foreach ($item->modifierCategories as $modifierCategory) {
+        foreach ($item->modifierGroups as $modifierCategory) {
             if ($modifierCategory->active !== 1 && $modifierCategory->deleted !== 0) {
                 continue;
             }

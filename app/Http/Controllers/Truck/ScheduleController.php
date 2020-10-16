@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Truck;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\MenuCategory;
-use App\Item;
 use Illuminate\Support\Facades\Auth;
 use App\Location;
 use App\Event;
+use Carbon\Carbon;
+use DateTimeZone;
+use DateTime;
+use App\EventType;
 
 class ScheduleController extends Controller
 {
@@ -17,17 +19,18 @@ class ScheduleController extends Controller
         $user = Auth::user();
         $events = Event::where([
             ['user_id', $user->id],
-            ['event_type_id', 1],
+            ['event_type_id', EventType::EVENT_SCHEDULED],
             ['deleted', 0],
-        ])->get();
-        return view('truck.schedule.index', compact('events'));
+        ])->with('location')->get();
+        $timezone = $user->timezone;
+        return view('truck.schedule.index', compact('events', 'timezone'));
     }
 
     public function create()
     {
         $user = Auth::user();
         $locations = Location::where([
-            ['user_id', $user->id],
+            ['user_id', EventType::EVENT_SCHEDULED],
             ['location_type_id', 1],
         ])->get();
         return view('truck.schedule.create', compact('locations'));
@@ -40,11 +43,12 @@ class ScheduleController extends Controller
             ['user_id', $user->id],
             ['location_type_id', 1],
         ])->get();
-        return view('truck.schedule.show', compact('schedule', 'locations'));
+        $timezone = $user->timezone;
+        return view('truck.schedule.show', compact('schedule', 'locations', 'timezone'));
     }
 
     public function update(Request $request, Event $schedule) {
-        $validate = $request->validate([
+        $request->validate([
             'date' => ['required',  'date_format:m/d/Y'],
             'start_time' => ['max:255', 'date_format:h:i a'],
             'end_time' => ['required', 'date_format:h:i a'],
@@ -94,12 +98,16 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'date' => ['required',  'date_format:m/d/Y'],
             'start_time' => ['max:255', 'date_format:h:i a'],
             'end_time' => ['required', 'date_format:h:i a'],
             'location' => ['required', 'in:new,save'],
         ]);
+
+        $user = Auth::user();
+        $startDatetime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), $user->timezone);
+        $endDatetime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'), $user->timezone);
 
         if ($request->input('location') === 'save') {
             $location_id = $request->input('location_id');
@@ -127,18 +135,12 @@ class ScheduleController extends Controller
             $location_id = $location->id;
         }
 
-
-        $user = Auth::user();
-
-        $startDatetime = date_create_from_format('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), timezone_open($user->timezone));
-        $endDatetime = date_create_from_format('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'), timezone_open($user->timezone));
-
         Event::create([
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
             'location_id' => $location_id,
-            'start_date_time' => $startDatetime->setTimezone(timezone_open('UTC'))->format('Y-m-d H:i:s'),
-            'end_date_time' => $endDatetime->setTimezone(timezone_open('UTC'))->format('Y-m-d H:i:s'),
+            'start_date_time' => $startDatetime->tz('UTC')->format('Y-m-d H:i:s'),
+            'end_date_time' => $endDatetime->tz('UTC')->format('Y-m-d H:i:s'),
         ]);
 
         return redirect()->route('truck.schedule.index')->with('success', 'Date was successfully added.');

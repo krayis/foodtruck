@@ -1,46 +1,39 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
-<div class="container">
-    <div class="flash-message">
-        @foreach (['danger', 'warning', 'success', 'info'] as $message)
-            @if(Session::has($message))
-                <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-            @endif
-        @endforeach
-    </div>
-</div>
-@include('truck.menu._partials.navtabs')
-<div class="container">
-    <div class="page-header">
-        <h1>Create Category</h1>
-    </div>
-    <div class="row">
-        <div class="col-sm-24 col-md-12">
+@extends('truck.layouts.admin.layout')
 
-                <form action="{{ route('truck.menu.category.store') }}" method="POST">
-                    @csrf
-                    <div class="form-group @error('name') has-error @enderror">
-                        <label for="">Category name</label>
-                        <input name="name" type="text" class="form-control" value="{{ old('name') }}" required>
-                        @error('name')
-                        <div class="help-block" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group @error('description') has-error @enderror">
-                        <label for="">Description</label>
-                        <textarea name="description" class="form-control" value="{{ old('description') }}"></textarea>
-                        @error('description')
-                        <div class="help-block" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </div>
-                        @enderror
-                    </div>
+@section('content')
+    @include('truck.menu._partials.navtabs')
+    <form action="{{ route('truck.menu.category.store') }}" method="POST">
+        @csrf
+        <div class="meta-header">
+            <div class="meta-inner">
+                <a href="{{ url()->previous() }}" class="back">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </a>
+                <div class="meta-buttons">
                     <button class="btn btn-primary">Save</button>
-                </form>
-
+                </div>
+            </div>
+            <div class="form-group form-group--title @error('name') has-error @enderror">
+                <input name="name" type="text" class="form-control form-control" placeholder="Category name" value="{{ old('name') }}" required>
+                @error('name')
+                <div class="help-block" role="alert">
+                    <strong>{{ $message }}</strong>
+                </div>
+                @enderror
+            </div>
         </div>
-    </div>
-</div>
-@include('truck.layouts.client.footer')
+        <div class="row">
+            <div class="col-md-16">
+                <div class="form-group @error('description') has-error @enderror">
+                    <label for="">Description</label>
+                    <textarea name="description" class="form-control" value="{{ old('description') }}" rows="3"></textarea>
+                    @error('description')
+                    <div class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    </form>
+@endsection

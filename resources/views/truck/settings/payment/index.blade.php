@@ -1,10 +1,10 @@
-@include('truck.layouts.admin.head')
-@include('truck.layouts.admin.nav')
+@extends('truck.layouts.admin.layout')
+
+@section('content')
 @include('truck.settings._partials.subnav')
 
-<div class="container">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-24 col-md-12">
             <div class="page-header">
                 <h1>Payments</h1>
             </div>
@@ -85,7 +85,7 @@
             </form>
         </div>
     </div>
-</div>
+
 <script>
     var $paymentProviders = $('[name="payment_provider"]');
     $paymentProviders.on('change', function() {
@@ -94,4 +94,4 @@
         $('#js-payment-provider').text($checked.data('label'));
     });
 </script>
-@include('truck.layouts.admin.footer')
+@endsection
