@@ -34,7 +34,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin'], function() {
     Route::resource('menu/modifier/group', 'Truck\Menu\Modifier\GroupController', ['as' => 'truck.menu.modifier']);
     Route::resource('menu/modifier', 'Truck\Menu\ModifierController', ['as' => 'truck.menu'] );
 
-    Route::resource('inventory', 'Truck\InventoryController', ['as' => 'truck', 'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']] );
+    Route::resource('inventory/templates', 'Truck\Inventory\TemplateController', ['as' => 'admin.inventory', 'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']] );
+    Route::resource('inventory/sheets', 'Truck\Inventory\SheetController', ['as' => 'admin.inventory', 'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']] );
     Route::resource('menu', 'Truck\MenuController', ['as' => 'truck', 'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']] );
     Route::resource('menu/item', 'Truck\Menu\ItemController', ['as' => 'truck.menu', 'only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']] );
     Route::resource('menu/category', 'Truck\Menu\CategoryController', ['as' => 'truck.menu']);

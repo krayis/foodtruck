@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryItem extends Model
+class InventoryTemplateItems extends Model
 {
     protected $fillable = [
-        'inventory_id', 'item_id', 'stock'
+        'inventory_template_id', 'item_id', 'stock'
     ];
 }

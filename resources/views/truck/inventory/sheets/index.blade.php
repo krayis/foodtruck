@@ -1,12 +1,16 @@
 @extends('truck.layouts.admin.layout')
 
 @section('content')
+
+    @include('truck.inventory._partials.navtabs')
+
     <div class="page-header">
-        <h1 class="inline-block">Inventory</h1>
+        <h1 class="inline-block">Inventory Sheets</h1>
         <div class="page-action">
-            <a class="btn btn-primary" href="{{ route('truck.inventory.create') }}">
+            <a class="btn btn-primary" href="{{ route('admin.inventory.sheets.create') }}">
                 <ion-icon name="add"></ion-icon>
-                New Inventory</a>
+                New Sheet
+            </a>
         </div>
     </div>
 
@@ -14,15 +18,15 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th width="1%" class="white-space--nowrap">Assigned Dates</th>
+            <th width="1%" class="white-space--nowrap">Assigned</th>
         </tr>
         </thead>
         <tbody>
-        @if (count($inventories))
-            @foreach ($inventories as $sheet)
+        @if (count($sheets))
+            @foreach ($sheets as $sheet)
                 <tr>
                     <td>
-                        <a href="{{ route('truck.inventory.edit', $sheet->id) }}">
+                        <a href="{{ route('admin.inventory.sheets.edit', $sheet->id) }}">
                             {{ $sheet->name }}
                         </a>
                     </td>

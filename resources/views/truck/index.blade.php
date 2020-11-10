@@ -80,7 +80,7 @@
         <div class="relative">
             <div class="brand">About FoodTruck.me</div>
             <p>
-                Grubhub helps you find and order food from wherever you are. How it works: you type in an address, we
+                FoodTruck.am helps you find and order food from wherever you are. How it works: you type in an address, we
                 tell you the restaurants that deliver to that locale as well as showing you droves of pickup restaurants
                 near you. Want to be more specific? Search by cuisine, restaurant name or menu item. We'll filter your
                 results accordingly. When you find what you're looking for, you can place your order online or by phone,

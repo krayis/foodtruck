@@ -94,7 +94,6 @@
             </div>
         </div>
     </form>
-    <a href="#" class="js-edit-item">Edit</a>
 
     <script>
         var modal = $('#itemModal');

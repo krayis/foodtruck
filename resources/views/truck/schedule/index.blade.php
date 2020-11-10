@@ -38,10 +38,10 @@
                         </a>
                     </td>
                     <td>
-                        {{ $event->startDatetime($timezone)->format('h:i a') }}
+                        {{ $event->startDatetime($timezone)->format('g:ia') }}
                     </td>
                     <td>
-                        {{ $event->endDatetime($timezone)->format('h:i a') }}
+                        {{ $event->endDatetime($timezone)->format('g:ia') }}
                     </td>
                     <td>{!! strpos($event->location->formatted_address, $event->location->name) === false ?  $event->location->name . '<br/>' . $event->location->formatted_address: $event->location->formatted_address !!}</td>
                     <td align="center">0</td>

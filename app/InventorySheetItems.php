@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class InventorySheetItems extends Model
 {
     protected $fillable = [
-        'user_id', 'truck_id', 'name'
+        'inventory_sheet_id', 'stock', 'item_id'
     ];
 }

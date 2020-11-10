@@ -2,18 +2,13 @@
 
 @section('content')
 
-    @foreach (['danger', 'warning', 'success', 'info'] as $message)
-        @if(Session::has($message))
-            <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
-        @endif
-    @endforeach
+    @include('truck.inventory._partials.navtabs')
 
-
-    <form action="{{ route('truck.inventory.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="{{ route('admin.inventory.templates.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
         <div class="meta-header">
             <div class="meta-inner">
-                <a href="{{ route('truck.inventory.index') }}" class="back">
+                <a href="{{ route('admin.inventory.templates.index') }}" class="back">
                     <ion-icon name="arrow-back"></ion-icon>
                 </a>
                 <div class="meta-buttons">

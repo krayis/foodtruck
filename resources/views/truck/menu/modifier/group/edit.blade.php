@@ -228,5 +228,5 @@
                 $('#' + $(this).data('target')).submit();
             }
         });
-    </script>
+    </script>`
 @endsection

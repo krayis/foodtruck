@@ -82,16 +82,16 @@ class ScheduleController extends Controller
         }
         $user = Auth::user();
 
-        $startDatetime = date_create_from_format('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'));
-        $endDatetime = date_create_from_format('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'));
+        $startDateTime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), $user->timezone);
+        $endDateTime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'), $user->timezone);
 
         $schedule->update([
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
             'location_id' => $location_id,
             'event_type_id' => 1,
-            'start_date_time' => $startDatetime->format('Y-m-d H:i:s'),
-            'end_date_time' => $endDatetime->format('Y-m-d H:i:s'),
+            'start_date_time' => $startDateTime->tz('UTC')->format('Y-m-d H:i:s'),
+            'end_date_time' => $endDateTime->tz('UTC')->format('Y-m-d H:i:s'),
         ]);
         return redirect()->route('truck.schedule.index')->with('success', 'Date was successfully updated.');
     }
@@ -106,8 +106,6 @@ class ScheduleController extends Controller
         ]);
 
         $user = Auth::user();
-        $startDatetime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), $user->timezone);
-        $endDatetime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'), $user->timezone);
 
         if ($request->input('location') === 'save') {
             $location_id = $request->input('location_id');
@@ -135,12 +133,15 @@ class ScheduleController extends Controller
             $location_id = $location->id;
         }
 
+        $startDateTime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), $user->timezone);
+        $endDateTime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('end_time'), $user->timezone);
+
         Event::create([
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
             'location_id' => $location_id,
-            'start_date_time' => $startDatetime->tz('UTC')->format('Y-m-d H:i:s'),
-            'end_date_time' => $endDatetime->tz('UTC')->format('Y-m-d H:i:s'),
+            'start_date_time' => $startDateTime->tz('UTC')->format('Y-m-d H:i:s'),
+            'end_date_time' => $endDateTime->tz('UTC')->format('Y-m-d H:i:s'),
         ]);
 
         return redirect()->route('truck.schedule.index')->with('success', 'Date was successfully added.');

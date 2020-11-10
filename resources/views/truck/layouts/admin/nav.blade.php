@@ -15,7 +15,7 @@
             <ion-icon name="document"></ion-icon>
             Menu</a></li>
     <li class="{{strpos(URL::current(),'/admin/inventory' ) ? "active" : null}}"><a
-            href="{{ route('truck.inventory.index') }}">
+            href="{{ route('admin.inventory.templates.index') }}">
             <ion-icon name="cube"></ion-icon>
             Inventory</a></li>
     <li class="{{strpos(URL::current(),'/admin/schedule') ? "active" : null}}"><a
