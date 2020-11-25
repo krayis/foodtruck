@@ -15,11 +15,19 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'google_api_key' => env('GOOGLE_API_KEY', false),
+
     'square_environment' => env('SQUARE_ENVIRONMENT', false),
     'square_oauth_base_url' => env('SQUARE_OAUTH_BASE_URL', false),
     'square_app_id' => env('SQUARE_APP_ID', false),
     'square_access_token' => env('SQUARE_ACCESS_TOKEN', false),
     'square_app_secret' => env('SQUARE_APP_SECRET', false),
+
+    'stripe_app_id' => env('STRIPE_APP_ID', false),
+    'stripe_app_secret' => env('STRIPE_APP_SECRET', false),
+    'stripe_oauth_base_url' => env('STRIPE_OAUTH_BASE_URL', false),
+
+    'paypal_app_id' => env('PAYPAL_APP_ID', false),
+    'paypal_app_secret' => env('PAYPAL_APP_SECRET', false),
 
     /*
     |--------------------------------------------------------------------------

@@ -19,7 +19,8 @@
         "laravie/geotools": "~1.0",
         "ramsey/uuid": "^4.0",
         "square/connect": "^3.20200422",
-        "square/square": "6.3.0.20200826"
+        "square/square": "6.3.0.20200826",
+        "stripe/stripe-php": "^7.61"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

@@ -135,7 +135,7 @@ class SquareController extends Controller
 
     public function paymentPage(Request $request)
     {
-        return view('truck.order.payment');
+        return view('truck.order.squarePayment');
     }
 
     public function processPayment(Request $request)
