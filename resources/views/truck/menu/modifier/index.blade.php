@@ -43,6 +43,9 @@
             </tbody>
         </table>
 
+
+{{ $modifiers->links() }}
+
 <script>
     $('.js-table-delete').on('click', function (e) {
         e.preventDefault();

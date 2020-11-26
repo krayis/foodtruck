@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import AddressInputDropdown from './AddressInputDropdown';
 import queryString from 'query-string';
+import {debounce} from 'lodash';
 
 const utilizeFocus = () => {
     const ref = React.createRef();
@@ -35,6 +36,7 @@ class AddressInput extends Component {
 
         };
         this.$address = utilizeFocus();
+        this.onSuggestionsFetchRequested1 = debounce(this.onSuggestionsFetchRequested,250);
     }
 
     toggleMap(state) {
@@ -143,7 +145,7 @@ class AddressInput extends Component {
                 suggestions={suggestions}
                 clearAddressInput={this.clearAddressInput.bind(this)}
                 onSuggestionSelected={this.onSuggestionSelected.bind(this)}
-                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested1.bind(this)}
                 onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
                 inputProps={inputProps}
             />

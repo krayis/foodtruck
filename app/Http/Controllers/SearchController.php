@@ -69,7 +69,7 @@ class SearchController extends Controller
     public function trucks(Request $request)
     {
         $rules = [
-            'latitude' => ['required', 'required_if:location_type_id,3', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+            'latitude' => ['required', 'required_if:type,3', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'longitude' => ['required', 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
         ];
 
@@ -93,7 +93,7 @@ class SearchController extends Controller
         $carbon = Carbon::now();
         $now = $carbon->format('Y-m-d H:i:s');
 
-        $events = Event::select(DB::raw("events.id, events.truck_id, locations.name, locations.formatted_address, locations.location_type_id, CAST(haversine(locations.latitude, locations.longitude, ?, ?) AS DECIMAL(10,2)) as distance"))
+        $events = Event::select(DB::raw("events.id, events.truck_id, locations.name, locations.formatted_address, locations.type, CAST(haversine(locations.latitude, locations.longitude, ?, ?) AS DECIMAL(10,2)) as distance"))
             ->leftJoin('locations', 'locations.id', '=', 'events.location_id')->where([
                 ['start_date_time', '<=', '?'],
                 ['end_date_time', '>=', '?'],

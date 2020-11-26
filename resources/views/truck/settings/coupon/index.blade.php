@@ -6,14 +6,13 @@
     <div class="page-header">
         <h1 class="inline-block">Coupons</h1>
         <div class="page-action">
-            <a class="btn btn-primary" href="{{ route('truck.settings.coupons.create') }}">Add Coupon</a>
+            <a class="btn btn-primary" href="{{ route('truck.settings.coupons.create') }}"><ion-icon name="add"></ion-icon> New Coupon</a>
         </div>
     </div>
 
     <table class="table">
         <thead>
         <tr>
-            <th width="1%"></th>
             <th>Code</th>
             <th>Minimum Grand Total</th>
             <th>Amount</th>
@@ -23,13 +22,7 @@
         <tbody>
         @foreach($coupons as $coupon)
             <tr>
-                <td width="1%" class="pd-0 {{ $coupon->active === 1 ? 'enabled' : 'disabled' }}">
-                                <span class="table-icon table-icon-padding">
-                                    <ion-icon
-                                        name="{{ $coupon->active === 1 ? 'ios-radio-button-on' : 'ios-pause' }}"></ion-icon>
-                                </span>
-                </td>
-                <td>{{ $coupon->code }}</td>
+                <td><a href="{{ route('truck.settings.coupons.edit',  $coupon->id) }}">{{ $coupon->code }}</a></td>
                 <td>${{ $coupon->min }}</td>
                 <td>
                     @if($coupon->type == 1)

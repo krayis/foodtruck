@@ -14,6 +14,6 @@ use Illuminate\Notifications\Notifiable;
 class Location extends Model
 {
     protected $fillable = [
-        'truck_id', 'user_id', 'name', 'formatted_address', 'note', 'payload', 'latitude', 'longitude', 'geohash', 'deleted', 'location_type_id'
+        'truck_id', 'user_id', 'name', 'formatted_address', 'note', 'payload', 'latitude', 'longitude', 'geohash', 'deleted', 'type'
     ];
 }

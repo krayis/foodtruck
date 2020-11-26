@@ -14,7 +14,7 @@
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     <link href="{{ asset('css/client/styles.css') }}" rel="stylesheet">
     <style>
-        input:focus {
+        input:focus, button:focus {
             outline: none;
         }
 
@@ -38,6 +38,14 @@
             z-index: 100;
         }
 
+        .jumbo .inner .form-search {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+
         .jumbo .inner h1 {
             font-weight: 700;
             line-height: 64px;
@@ -57,9 +65,7 @@
             font-weight: 500;
             color: rgb(25, 25, 25);
             width: 100%;
-            max-width: 300px;
             display: block;
-            margin: 0 auto;
         }
 
         .jumbo .inner input:focus {
@@ -103,13 +109,37 @@
             letter-spacing: -0.04ch;
             font-size: 18px;
         }
+
+        .button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: #5A8521;
+            height: 38px;
+            width: 38px;
+            border-radius: 24px;
+            color: #ffffff;
+            line-height: 48px;
+            border: 0;
+        }
+        .button svg {
+            position: relative;
+            top: 2px;
+            right: -1px;
+        }
     </style>
 </head>
 <body>
 <div class="jumbo">
     <div class="inner">
         <h1>Your favorite food trucks, online ordering</h1>
-        <input type="text" placeholder="Enter address"/>
+        <form class="form-search" action="/search">
+            <input type="text" placeholder="Enter address"/>
+            <button class="button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12.2929 17.2929C11.9024 17.6834 11.9024 18.3166 12.2929 18.7071C12.6834 19.0976 13.3166 19.0976 13.7071 18.7071L19.1578 13.2564C19.242 13.1722 19.3427 13.0717 19.424 12.9758C19.5183 12.8648 19.6439 12.6962 19.7195 12.4635C19.8174 12.1623 19.8174 11.8377 19.7195 11.5365C19.6439 11.3038 19.5183 11.1352 19.424 11.0242C19.3427 10.9283 19.242 10.8278 19.1578 10.7436L13.7071 5.29289C13.3166 4.90237 12.6834 4.90237 12.2929 5.29289C11.9024 5.68342 11.9024 6.31658 12.2929 6.70711L16.5858 11L5 11C4.44772 11 4 11.4477 4 12C4 12.5523 4.44771 13 5 13L16.5858 13L12.2929 17.2929Z" fill="#fffffff"></path></svg>
+            </button>
+        </form>
+
     </div>
 </div>
 <div class="section section--cta">

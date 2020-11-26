@@ -14,7 +14,7 @@
                     <ion-icon name="arrow-back"></ion-icon>
                 </a>
                 <div class="meta-buttons">
-                    <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">
+                    <button type="button" class="btn btn-grey" data-action="delete" data-target="form-delete">
                         Delete
                     </button>
                     <button class="btn btn-primary">Save</button>
@@ -75,7 +75,8 @@
                     <input type="file" name="thumbnail">
                     @if (isset($item->thumbnail))
                         <br/>
-                        <img src="{{ asset('storage/' . $item->thumbnail)  }}" class="img-thumbnail"/>
+                        <img src="{{ Storage::disk('s3')->url($item->thumbnail)  }}" class="img-thumbnail" style="margin-bottom: 5px"/>
+                        <button class="btn btn-primary btn-sm" type="button" data-action="delete" data-target="form-delete-thumbnail">Remove image</button>
                     @endif
                     @error('thumbnail')
                     <div class="help-block" role="alert">
@@ -169,7 +170,7 @@
                         <h4 class="modal-title" id="myModalLabel">Add Modifier Group</h4>
                     </div>
                     <div class="modal-body">
-                        <table class="table">
+                        <table class="table table-condensed">
                             <thead>
                             <tr>
                                 <th width="1%"></th>
@@ -201,6 +202,14 @@
         </div>
     </form>
 
+    <form action="{{ route('truck.menu.item.update',  $item->id) }}" id="form-delete-thumbnail"
+          style="display: none;"
+          method="POST">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="delete_thumbnail" value="1" />
+    </form>
+
     <form action="{{ route('truck.menu.item.destroy',  $item->id) }}" id="form-delete"
           style="display: none;"
           method="POST">
@@ -210,6 +219,7 @@
 
     <script>
         var form = $('#item-form');
+
         $('[data-action="delete"]').on('click', function (e) {
             e.preventDefault();
             if (confirm('Are you sure you want to delete?')) {
@@ -249,7 +259,6 @@
         $('[name="sold_out_option"]').on('change', function() {
             var $self = $(this);
             $self.closest('.row').find('.form-group__leading').hide();
-            console.log('.form-group__leading--' + $self.val());
             if ($self.is(':checked')) {
                 $self.closest('.row').find('.form-group__leading--' + $self.val()).show();
             } else {

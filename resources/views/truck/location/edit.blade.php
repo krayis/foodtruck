@@ -25,67 +25,66 @@
                     <ion-icon name="arrow-back"></ion-icon>
                 </a>
                 <div class="meta-buttons">
-                    <button type="button" class="btn btn-default" data-action="delete" data-target="delete-form">Delete
+                    <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
                     </button>
                     <button class="btn btn-primary">Save</button>
                 </div>
             </div>
             <div class="form-group--title  @error('place_id') has-error @enderror">
                 <input id="input-address" type="text" class="form-control" name="address" placeholder="Address"
-                       value="{{ $location->formatted_address }}"/>
+                       value="{{ $location->formatted_address }}" readonly/>
                 <input type="hidden" name="place_id" {{ $location->place_id }}/>
-                @error('place_id')
-                <div class="help-block" role="alert">
-                    <strong>Please make sure you have a confirmed address.</strong>
-                </div>
-                @enderror
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-15">
-                <div class="form-group" id="js-preview-address">
-                    <div class="well">
-                        <strong>Confirmed Address:</strong>
-                        <div id="js-preview-address-formatted">
-                            {!! strpos($location->formatted_address, $location->name) === false ?  $location->name . '<br/>' . $location->formatted_address: $location->formatted_address !!}
-                        </div>
-                    </div>
-                </div>
+            <div class="col-sm-12">
                 <div class="form-group @error('note') has-error @enderror">
                     <label for="input-note">Location note</label>
-                    <textarea id="input-note" class="form-control" name="note">{{ $location->note }}</textarea>
+                    <textarea id="input-note" class="form-control" rows="2" name="note">{{ $location->note }}</textarea>
                     @error('note')
                     <div class="help-block" role="alert">
                         <strong>{{ $message }}</strong>
                     </div>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <div id="map" class="map" style="height: 500px; border-radius: 2px; overflow: hidden"></div>
+                </div>
             </div>
         </div>
+
+
     </form>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{config('app.google_api_key')}}&callback=initMap"
+            async></script>
     <script>
-        $('[name="address"]').autocomplete({
-            source: function (request, response) {
-                $.getJSON('{{ route('truck.location@search') }}', {
-                    term: request.term
-                }, response);
-            },
-            select: function (event, ui) {
-                event.preventDefault();
-                $(this).val(ui.item.label);
-                $('#js-preview-address-formatted').text(ui.item.label);
-                $('[name="place_id"]').val(ui.item.value);
-                $('#js-preview-address').show();
-            },
-            focus: function (event, ui) {
-                event.preventDefault();
-                $(this).val(ui.item.label);
-                $('#js-preview-address-formatted').text(ui.item.label);
-                $('[name="place_id"]').val(ui.item.value);
-                $('#js-preview-address').show();
-            }
-        });
+        var map,
+            marker,
+            $map = $('#map-view');
+
+        function updateMap(cords) {
+            map.setCenter(cords);
+            marker.setPosition(cords);
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14
+            });
+            map.addListener('center_changed', function () {
+                $map.css('display', 'block');
+            });
+            marker = new google.maps.Marker({
+                map: map,
+                animation: google.maps.Animation.DROP,
+            });
+
+            updateMap({
+                lat: {{ $location->latitude }},
+                lng: {{ $location->longitude }},
+            });
+        }
 
         $('[data-action="delete"]').on('click', function (e) {
             e.preventDefault();
@@ -94,5 +93,4 @@
             }
         });
     </script>
-
 @endsection

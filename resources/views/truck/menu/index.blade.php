@@ -10,87 +10,111 @@
             <div class="col-md-16">
                 <div class="page-header">
                     <h1 class="inline-block">Overview</h1>
-                    <div class="page-action">
-                        <button class="btn btn-primary">Save</button>
-                    </div>
+                    @if ($categories->count())
+                        <div class="page-action">
+                            <button class="btn btn-primary">Save</button>
+                        </div>
+                    @endif
                 </div>
 
-                <ul class="menu sortable">
-                    @foreach($categories as $key => $category)
-                        <li class="section" data-key="{{$key}}" data-name="categories">
-                            <div class="item">
-                                <div class="item-wrapper">
-                                    <div class="reorder">
-                                        <ion-icon name="reorder"></ion-icon>
-                                    </div>
-                                    <div>
-                                        {{ $category->name }}
-                                        <input type="hidden" name="categories[{{$key}}][id]"
-                                               value="{{ $category->id }}">
-                                        <input type="hidden" data-key="{{$key}}" name="categories[{{$key}}][sort_order]"
-                                               value="{{ $category->sort_order }}">
-                                    </div>
-                                    <div class="more">
-                                        <div class="dropdown">
-                                            <a href="#" data-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="true">
-                                                <ion-icon name="more"></ion-icon>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href="{{ route('truck.menu.category.show', $category->id ) }}">
-                                                        Edit Category
-                                                    </a>
-                                                </li>
-                                            </ul>
+                @if ($categories->count())
+                    <ul class="menu sortable">
+                        @foreach($categories as $key => $category)
+                            <li class="section" data-key="{{$key}}" data-name="categories">
+                                <div class="item">
+                                    <div class="item-wrapper">
+                                        <div class="reorder">
+                                            <ion-icon name="reorder"></ion-icon>
+                                        </div>
+                                        <div>
+                                            {{ $category->name }}
+                                            <input type="hidden" name="categories[{{$key}}][id]"
+                                                   value="{{ $category->id }}">
+                                            <input type="hidden" data-key="{{$key}}"
+                                                   name="categories[{{$key}}][sort_order]"
+                                                   value="{{ $category->sort_order }}">
+                                        </div>
+                                        <div class="more">
+                                            <div class="dropdown">
+                                                <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                   aria-expanded="true">
+                                                    <ion-icon name="more"></ion-icon>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="{{ route('truck.menu.category.show', $category->id ) }}">
+                                                            Edit Category
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            @if (count($category->items))
-                                <ul class="sortable">
-                                    @foreach($category->items as $key => $item)
-                                        <li class="item" data-key="{{$key}}" data-name="items">
-                                            <div class="item-wrapper">
-                                                <div class="reorder">
-                                                    <ion-icon name="reorder"></ion-icon>
-                                                </div>
-                                                <div>
-                                                    {{ $item->name }}
-                                                    <input type="hidden" name="items[{{$key}}][id]"
-                                                           value="{{ $item->id }}">
-                                                    <input type="hidden" data-key="{{$key}}"
-                                                           name="items[{{$key}}][sort_order]"
-                                                           value="{{ $item->sort_order }}">
-                                                </div>
-                                                <div class="more">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-toggle="dropdown" aria-haspopup="true"
-                                                           aria-expanded="true">
-                                                            <ion-icon name="more"></ion-icon>
-                                                        </a>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                                            <li>
-                                                                <a href="{{ route('truck.menu.item.edit', $item->id ) }}">
-                                                                    Out of stock
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{{ route('truck.menu.modifier.group.edit', $item->id ) }}">
-                                                                    Remove from category
-                                                                </a>
-                                                            </li>
-                                                        </ul>
+                                @if (count($category->items))
+                                    <ul class="sortable">
+                                        @foreach($category->items as $key => $item)
+                                            <li class="item" data-key="{{$key}}" data-name="items">
+                                                <div class="item-wrapper">
+                                                    <div class="reorder">
+                                                        <ion-icon name="reorder"></ion-icon>
+                                                    </div>
+                                                    <div>
+                                                        {{ $item->name }}
+                                                        <input type="hidden" name="items[{{$key}}][id]"
+                                                               value="{{ $item->id }}">
+                                                        <input type="hidden" data-key="{{$key}}"
+                                                               name="items[{{$key}}][sort_order]"
+                                                               value="{{ $item->sort_order }}">
+                                                    </div>
+                                                    <div class="more">
+                                                        <div class="dropdown">
+                                                            <a href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                               aria-expanded="true">
+                                                                <ion-icon name="more"></ion-icon>
+                                                            </a>
+                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                                <li>
+                                                                    <a href="{{ route('truck.menu.item.edit', $item->id ) }}">
+                                                                        Out of stock
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="{{ route('truck.menu.modifier.group.edit', $item->id ) }}">
+                                                                        Remove from category
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </li>
-                    @endforeach
-                </ul>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    @if ($itemCount)
+                        <p class="alert alert-warning">
+                            Please assign categories to your items.<br/>
+                            <strong><a href="{{ route('truck.menu.category.index') }}">Create a
+                                    category</a></strong><br/>
+                            <strong><a href="{{ route('truck.menu.item.index') }}">Assign category to
+                                    item</a></strong>
+                        </p>
+                    @else
+                        <p class="alert alert-warning">
+                            You have not created a category or items.<br/>
+                            <strong><a href="{{ route('truck.menu.category.index') }}">Create a
+                                    category</a></strong><br/>
+                            <strong><a href="{{ route('truck.menu.item.index') }}">Assign item to
+                                    category</a></strong>
+                        </p>
+                    @endif
+
+                @endif
             </div>
         </div>
     </form>

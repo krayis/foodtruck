@@ -570,7 +570,7 @@ ion-icon {
     position: sticky;
     padding: 0 45px 0 45px;
     margin: 0 -45px;
-    top: 54px;
+    top: 45px;
     background: #ffffff;
     z-index: 100;
 
@@ -578,18 +578,20 @@ ion-icon {
         font-size: 32px;
         position: relative;
         left: -5px;
-        top: 5px;
+        float: left;
+        display: inline-block;
+        ion-icon {
+            top: 0;
+            display: block;
+        }
     }
 
     .meta-inner {
         position: relative;
-
+        padding: 15px 0;
+        @include clearfix;
         .meta-buttons {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translate(0, -50%);
-
+            float: right;
             button {
                 margin-right: 10px;
 
@@ -612,7 +614,7 @@ ion-icon {
 
 .btn {
     ion-icon {
-        top: 3px;
+        top: 2px;
         margin-right: 5px;
     }
 }
@@ -786,5 +788,22 @@ ul.menu {
 
         }
     }
+    &.table-condensed {
+        font-size: 12px;
+        > tbody {
+            tr > {
+                td {
+                    line-height: 1.5em;
+                }
+            }
+        }
+    }
+}
 
+.pagination-wrapper {
+    @include clearfix;
+    .pagination {
+        float: right;
+        margin: 0 auto;
+    }
 }

@@ -12,21 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"),
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+
     public function index()
     {
         $user = Auth::user();
@@ -44,7 +36,8 @@ class OrderController extends Controller
 
         $offset = gmdate("h:i", abs($timezone->gmt_offset));
         $offset = $timezone->gmt_offset < 0 ? '-' . $offset : '+' . $offset;
-        $orders = Order::select('*', DB::raw("CONVERT_TZ(pickup_at, '+00:00' , '". $offset ."') as pickup_at"))->with('items', 'items.modifiers')->orderBy('pickup_at', 'desc')->get();
+        $orders = Order::select('*', DB::raw("CONVERT_TZ(pickup_at, '+00:00' , '". $offset ."') as pickup_at"))->with('items', 'items.modifiers')->orderBy('pickup_at', 'desc')->paginate(20);
+
         return view('truck.order.index', compact('orders'));
     }
 }

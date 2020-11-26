@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "laravie/geotools": "~1.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "ramsey/uuid": "^4.0",
         "square/connect": "^3.20200422",
         "square/square": "6.3.0.20200826"

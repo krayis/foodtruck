@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Truck;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\MenuCategory;
-use App\Item;
 use Illuminate\Support\Facades\Auth;
 use App\Location;
 use App\LocationCache;
+use App\Services\LocationManager;
 
 class LocationController extends Controller
 {
@@ -22,32 +21,20 @@ class LocationController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         $user = Auth::user();
         $locations = Location::where([
             'user_id' => $user->id,
-            'location_type_id' => 1,
+            'type' => 'PREDETERMINED',
             'deleted' => 0,
-        ])->get();
+        ])->paginate(20);
         return view('truck/location/index', compact('locations'));
     }
 
     public function create()
     {
-
-        //https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyDEYtVHikZFHuE-2ffWRCc9fVxB5P68h8w
         return view('truck/location/create');
-    }
-
-    public function show(Request $request, Location $location)
-    {
-        return view('truck.location.show', compact('location'));
     }
 
     public function edit(Request $request, Location $location)
@@ -57,73 +44,21 @@ class LocationController extends Controller
 
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'place_id' => ['required', 'string', 'min:1', 'max:255'],
             'note' => ['max:255'],
         ]);
-
-        $apiKey = config('app.google_api_key');
-        $url = sprintf('https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s',
-            $request->input('place_id'),
-            $apiKey
-        );
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', $url);
-        $response = $response->getBody()->getContents();
-        $place = json_decode($response, true);
         $user = Auth::user();
-
-        $geotools = new \League\Geotools\Geotools();
-        $coordToGeohash = new \League\Geotools\Coordinate\Coordinate(sprintf('%s, %s', $place['result']['geometry']['location']['lat'], $place['result']['geometry']['location']['lng']));
-        $encoded = $geotools->geohash()->encode($coordToGeohash, 12);
-
-        Location::create([
-            'truck_id' => $user->truck->id,
-            'user_id' => $user->id,
-            'name' => $place['result']['name'],
-            'formatted_address' => $place['result']['formatted_address'],
-            'latitude' => $place['result']['geometry']['location']['lat'],
-            'longitude' => $place['result']['geometry']['location']['lng'],
-            'geohash' => $encoded->getGeohash(),
-            'note' => $request->input('note'),
-            'payload' => json_encode($place),
-            'location_type_id' => 1,
-        ]);
-
+        $place = LocationManager::getByPlaceId($request->input('place_id'));
+        LocationManager::create($user, $place, $request->input('note'), 'PREDETERMINED');
         return redirect()->action('Truck\LocationController@index')->with('success', 'Location was successfully added.');
     }
 
     public function update(Request $request, Location $location)
     {
-        $validate = $request->validate([
+        $request->validate([
             'note' => ['max:255'],
         ]);
-
-        if ($request->input('place_id')) {
-            $apiKey = config('app.google_api_key');
-            $url = sprintf('https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s',
-                $request->input('place_id'),
-                $apiKey
-            );
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', $url);
-            $response = $response->getBody()->getContents();
-            $place = json_decode($response, true);
-
-            $geotools = new \League\Geotools\Geotools();
-            $coordToGeohash = new \League\Geotools\Coordinate\Coordinate(sprintf('%s, %s', $place['result']['geometry']['location']['lat'], $place['result']['geometry']['location']['lng']));
-            $encoded = $geotools->geohash()->encode($coordToGeohash, 12);
-
-            $location->update([
-                'name' => $place['result']['name'],
-                'formatted_address' => $place['result']['formatted_address'],
-                'latitude' => $place['result']['geometry']['location']['lat'],
-                'longitude' => $place['result']['geometry']['location']['lng'],
-                'geohash' => $encoded->getGeohash(),
-                'note' => $request->input('note'),
-                'payload' => json_encode($place),
-            ]);
-        }
 
         $location->update([
             'note' => $request->input('note'),

@@ -44,7 +44,6 @@ class TruckController extends Controller
 
         $event = Event::select('id', 'location_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))->where([
             ['truck_id', $truck->id],
-            ['deleted', 0],
             [DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."')"), '<=', $now],
             [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $now],
         ])->first();
@@ -70,10 +69,9 @@ class TruckController extends Controller
         $categories = MenuCategory::select('id', 'name', 'description', 'sort_order')
             ->where([
                 ['active', 1],
-                ['deleted', 0],
                 ['truck_id', $truck->id],
             ])
-            ->orderBy('sort_order', 'desc')
+            ->orderBy('sort_order', 'asc')
             ->get();
 
         $categoriesId = [];
@@ -87,7 +85,6 @@ class TruckController extends Controller
         $items = Item::select('id', 'name', 'description', 'price', 'thumbnail', 'sort_order', 'category_id')
             ->where([
                 ['active', 1],
-                ['deleted', 0],
                 ['truck_id', $truck->id],
             ])
             ->whereIn('category_id', $categoriesId)
@@ -111,7 +108,6 @@ class TruckController extends Controller
             }
             array_push($response['menu'], $category);
         }
-
 
         return response()->json($response);
     }

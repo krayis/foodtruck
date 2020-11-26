@@ -60,7 +60,7 @@
                     <select name="location_id" class="form-control" required>
                         <option value="" disabled selected>(Select an address)</option>
                         @foreach($locations as $location)
-                            @if($location->location_type_id === 1)
+                            @if($location->type === 'PREDETERMINED')
                                 <option value="{{ $location->id}}">
                                     {{ strpos($location->formatted_address, $location->name) === false ?  $location->name . ', ' . $location->formatted_address: $location->formatted_address }}
                                 </option>
@@ -246,6 +246,5 @@
         }
     });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{config('app.google_api_key')}}&callback=initMap"
-        async></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{config('app.google_api_key')}}&callback=initMap" async></script>
 @endsection

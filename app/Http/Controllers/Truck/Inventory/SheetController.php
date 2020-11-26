@@ -71,10 +71,10 @@ class SheetController extends Controller
         ])->get()->pluck('stock', 'item_id')->toArray();
         $carbon = Carbon::now(new DateTimeZone($user->timezone));
         $offset = $user->tz->gmtOffset();
-        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'event_type_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
+        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'type', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
             ->where([
                 ['user_id', '=', $user->id],
-                ['event_type_id','=', 2],
+                ['type','=', 'PREDETERMINED'],
                 [DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."')"), '<=', $carbon->format('Y-m-d H:i:s')],
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],
             ])->first();

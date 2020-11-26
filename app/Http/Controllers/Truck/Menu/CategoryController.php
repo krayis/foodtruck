@@ -20,9 +20,8 @@ class CategoryController extends Controller
     {
         $user = Auth::user();
         $categories = MenuCategory::where([
-            ['truck_id', $user->truck->id],
-            ['deleted', 0]
-        ])->orderBy('sort_order', 'desc')->get();
+            ['truck_id', $user->truck->id]
+        ])->orderBy('sort_order', 'desc')->paginate(20);
         return view('truck.menu.category.index', compact('categories'));
     }
 
@@ -33,7 +32,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'min:1', 'max:255'],
             'description' => ['max:255'],
         ]);
@@ -87,11 +86,10 @@ class CategoryController extends Controller
 
     public function destroy(MenuCategory $category)
     {
-        $category->update([
-            'deleted' => 1
-        ]);
+        $categoryId = $category->id;
+        $category->delete();
         Item::where([
-            'category_id' => $category->id
+            'category_id' => $categoryId
         ])->update([
             'category_id' => null
         ]);

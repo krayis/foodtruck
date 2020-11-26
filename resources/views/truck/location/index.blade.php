@@ -10,7 +10,9 @@
     <div class="page-header">
         <h1>Locations</h1>
         <div class="page-action">
-            <a class="btn btn-primary" href="{{ route('truck.location.create') }}">New Location</a>
+            <a class="btn btn-primary" href="{{ route('truck.location.create') }}">
+                <ion-icon name="add" role="img" class="md hydrated" aria-label="add"></ion-icon>
+                New Location</a>
         </div>
     </div>
 
@@ -34,13 +36,5 @@
         @endforeach
         </tbody>
     </table>
-
-    <script>
-        $('.js-table-delete').on('click', function (e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to delete?')) {
-                $(this).closest('td').find('form').submit();
-            }
-        });
-    </script>
+    {{ $locations->links() }}
 @endsection

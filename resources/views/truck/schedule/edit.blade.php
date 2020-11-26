@@ -16,7 +16,7 @@
                     <ion-icon name="arrow-back"></ion-icon>
                 </a>
                 <div class="meta-buttons">
-                    <button type="button" class="btn btn-default" data-action="delete" data-target="delete-form">Delete
+                    <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
                     </button>
                     <button class="btn btn-primary">Save</button>
                 </div>
@@ -60,7 +60,13 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="preorder" value="1" {{ $schedule->preorder == '1' ? 'checked' : '' }} /> Allow pre-order
+                        </label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div><label>Address</label></div>
                     <label class="radio-inline">
@@ -86,7 +92,7 @@
                 <div id="location-new" class="location-inputs" style="display: none">
                     <div class="form-group @error('place_id') has-error @enderror">
                         <label for="input-address">Address</label>
-                        <input id="input-address" type="text" class="form-control" name="address_123456789"
+                        <input id="input-address" type="text" class="form-control" name="address"
                                autocomplete="off" value="{{ old('address') }}"/>
                         @error('place_id')
                         <div class="help-block" role="alert">
@@ -124,7 +130,7 @@
         var radioInputs = $('[name="location"]');
         radioInputs.on('change', function () {
             $('.location-inputs').css('display', 'none');
-            console.log(radioInputs.filter(":checked").val())
+            console.log(radioInputs.filter(":checked").val());
             $('#location-' + radioInputs.filter(":checked").val()).css('display', 'block');
         });
         $('[name="date"]').datepicker();
@@ -137,9 +143,9 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('[name="address_123456789"]').autocomplete({
+            $('[name="address"]').autocomplete({
                 source: function (request, response) {
-                    $.getJSON("/truck/location/search", {
+                    $.getJSON('{{ route('truck.location@search') }}', {
                         term: request.term
                     }, response);
                 },
@@ -148,14 +154,13 @@
                     $(this).val(ui.item.label);
                     $('#js-preview-address-formatted').text(ui.item.label);
                     $('[name="place_id"]').val(ui.item.value);
-                    $('#js-preview-address').show();
+                    $('#js-preview-address, #js-map-container').show();
                 },
                 focus: function (event, ui) {
                     event.preventDefault();
                     $(this).val(ui.item.label);
                     $('#js-preview-address-formatted').text(ui.item.label);
                     $('[name="place_id"]').val(ui.item.value);
-                    $('#js-preview-address').show();
                 }
             });
             $('[data-action="delete"]').on('click', function (e) {

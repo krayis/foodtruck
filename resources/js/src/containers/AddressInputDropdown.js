@@ -1,8 +1,7 @@
-import React from "react";
-import Autosuggest from "react-autosuggest";
-import useComponentVisible from "../hooks/useComponentVisible";
-import AddressMap from "./AddressMap";
-
+import React from 'react';
+import Autosuggest from 'react-autosuggest';
+import useComponentVisible from '../hooks/useComponentVisible';
+import AddressMap from './AddressMap';
 
 const getSuggestions = suggestions => {
     return suggestions;
@@ -14,6 +13,12 @@ const getSuggestionValue = suggestion => suggestion.label;
 const renderSuggestion = suggestion => (
     <div>{suggestion.label}</div>
 );
+
+const getCoordinates = cords => {
+    console.log(cords)
+
+    return cords;
+}
 
 const AddressInputDropdown = (props) => {
     const {
@@ -41,6 +46,7 @@ const AddressInputDropdown = (props) => {
         props.confirmAddress();
         toggleDropdown();
     }
+
     return (
         <li className={`address-wrapper ${isComponentVisible ? 'active' : ''}`} ref={ref}>
             <div className="address-inner">
@@ -54,7 +60,7 @@ const AddressInputDropdown = (props) => {
             {isComponentVisible && (
                 <div className='dropdown'>
                     <label htmlFor="input-address">Search for an address</label>
-                    <div className="dropdown--input">
+                    <form className="dropdown--input" autoComplete="off">
                         <i className="icon ion-ios-pin"></i>
                         <Autosuggest
                             suggestions={props.suggestions}
@@ -68,17 +74,19 @@ const AddressInputDropdown = (props) => {
                         />
                         <i className="icon ion-ios-close" onClick={props.clearAddressInput}
                            style={{display: props.inputProps.value.length === 0 ? 'none' : 'block'}}></i>
-                    </div>
-                    <div className="dropdown-preview" style={{display: props.showMap ? 'block' : 'none'}}>
+                    </form>
+                    { props.showMap &&  <div className="dropdown-preview">
                         <AddressMap
-                            coordinates={props.coordinates}
+                            coordinates={getCoordinates(props.coordinates)}
                             googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}`}
-                            loadingElement={<div style={{ height: `100%` }} />}
-                            containerElement={<div className="dropbox-map" style={{ height: `200px` }} />}
-                            mapElement={<div style={{ height: `100%` }} />}
+                            loadingElement={<div style={{height: `100%`}}/>}
+                            containerElement={<div className="dropbox-map" style={{height: `200px`}}/>}
+                            mapElement={<div style={{height: `100%`}}/>}
                         />
                         <button onClick={confirmAddress}>Done</button>
                     </div>
+                    }
+
 
                 </div>
             )}

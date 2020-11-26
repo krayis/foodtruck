@@ -33,7 +33,7 @@
             @foreach($events as $event)
                 <tr>
                     <td>
-                        <a href="{{ route('truck.schedule.show', $event->id) }}">
+                        <a href="{{ route('truck.schedule.edit', $event->id) }}">
                             {{ $event->startDatetime($timezone)->format('m/d/y') }}
                         </a>
                     </td>
@@ -56,5 +56,5 @@
         @endif
         </tbody>
     </table>
-
+    {{ $events->links() }}
 @endsection

@@ -186,6 +186,7 @@ class CheckoutController extends Controller
         OrderHelper::updateGrandTotal($order);
         return $this->show($checkout);
     }
+
     public function show($checkout)
     {
         $response = [];
@@ -229,7 +230,7 @@ class CheckoutController extends Controller
         $offset = gmdate("h:i", abs($timezone->gmt_offset));
         $offset = $timezone->gmt_offset < 0 ? '-' . $offset : '+' . $offset;
 
-        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'event_type_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
+        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'type', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
             ->where([
                 ['truck_id', $truck->id],
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],
@@ -294,7 +295,7 @@ class CheckoutController extends Controller
 
         $response['items'] = $orderItems;
 
-        $schedule = Event::select('id', 'truck_id', 'location_id', 'event_type_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
+        $schedule = Event::select('id', 'truck_id', 'location_id', 'type', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
             ->where([
                 ['truck_id', $truck->id],
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],

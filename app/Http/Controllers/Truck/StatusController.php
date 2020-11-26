@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Event;
 use App\EventType;
+use App\Services\LocationManager;
 
 class StatusController extends Controller
 {
@@ -31,19 +32,17 @@ class StatusController extends Controller
         $minutes = date('i', $now);
         $now = $now + ((30 - ($minutes % 15)) * 60);
         $range = range($now, strtotime("24:00"), 15 * 60);
-
         $offset = $user->tz->gmtOffset();
 
         $locations = Location::where([
             'user_id' => $user->id,
             'deleted' => 0,
-            'location_type_id' => EventType::TEMPORARY,
         ])->get();
 
-        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'event_type_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
+        $event = Event::select('id', 'user_id', 'truck_id', 'location_id', 'type', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."') as end_date_time"))
             ->where([
                 ['user_id', '=', $user->id],
-                ['event_type_id','=', 2],
+                ['type','IMPROMPTU'],
                 [DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '". $offset ."')"), '<=', $carbon->format('Y-m-d H:i:s')],
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],
             ])->first();
@@ -63,37 +62,23 @@ class StatusController extends Controller
             'place_id' => ['required_if:location_type_id,2'],
         ]);
 
-        if ($request->input('location_type_id') == 3) {
-            $location = Location::create([
-                'truck_id' => $user->truck->id,
-                'user_id' => $user->id,
+        if ($request->input('location_type') == 'GPS_COORDINATES') {
+            $location = LocationManager::create($user, [
                 'name' => 'Find Me Location',
                 'latitude' => $request->input('find_me_latitude'),
                 'longitude' => $request->input('find_me_longitude'),
-                'location_type_id' => 3,
-            ]);
+            ], null, 'GPS_COORDINATES');
             $locationId = $location->id;
-        } else if ($request->input('location_type_id') == 2) {
-            $apiKey = config('app.google_api_key');
-            $url = sprintf('https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s',
-                $request->input('place_id'),
-                $apiKey
-            );
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', $url);
-            $response = $response->getBody()->getContents();
-            $place = json_decode($response, true);
-            $location = Location::create([
-                'truck_id' => $user->truck->id,
-                'user_id' => $user->id,
+        } else if ($request->input('location_type') == 'PREDETERMINED') {
+            $place = LocationManager::getByPlaceId($request->input('place_id'));
+            $location = LocationManager::create($user, [
                 'name' => $place['result']['name'],
                 'formatted_address' => $place['result']['formatted_address'],
                 'latitude' => $place['result']['geometry']['location']['lat'],
                 'longitude' => $place['result']['geometry']['location']['lng'],
-                'note' => $request->input('note'),
+                'geohash' => $place['result']['geohash_encoded']->getGeohash(),
                 'payload' => json_encode($place),
-                'location_type_id' => 1,
-            ]);
+            ], $request->input('note'), 'PREDETERMINED');
             $locationId = $location->id;
         } else {
             $locationId = $request->input('location_id');
@@ -108,7 +93,7 @@ class StatusController extends Controller
             'location_id' => $locationId,
             'start_date_time' => $startDateTime->tz('UTC')->format('Y-m-d H:i:s'),
             'end_date_time' => $endDateTime->tz('UTC')->format('Y-m-d H:i:s'),
-            'event_type_id' => EventType::TEMPORARY
+            'type' => 'IMPROMPTU'
         ]);
         return redirect()->route('truck.status.index')->with('success', 'You have successfully updated your status.');
     }

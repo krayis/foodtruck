@@ -11,7 +11,7 @@
             <ion-icon name="time"></ion-icon>
             My Status</a></li>
     <li class="{{strpos(URL::current(),'/admin/menu' ) ? "active" : null}}"><a
-            href="{{ route('truck.menu.item.index') }}">
+            href="{{ route('truck.menu.index') }}">
             <ion-icon name="document"></ion-icon>
             Menu</a></li>
     <li class="{{strpos(URL::current(),'/admin/inventory' ) ? "active" : null}}"><a

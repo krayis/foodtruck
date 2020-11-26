@@ -43,7 +43,7 @@ class SearchPage extends Component {
             <div className="container--index">
                 <div className="header">
                     <div className="topbar">
-                        <h1>{this.state.trucks.length} {this.state.trucks.length === 1 ? 'result' : 'results'} found</h1>
+                        <h1>{this.state.trucks.length} {this.state.trucks.length === 1 ? 'truck' : 'trucks'} found</h1>
                         <form className="form-inline">
                             <label>Distance: </label>
                             <select>

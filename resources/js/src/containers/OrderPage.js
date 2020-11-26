@@ -58,15 +58,21 @@ class OrderPage extends Component {
                     <h1 className="food-truck-name">{this.state.name}</h1>
                     <div className="food-truck-address">Current location: {this.state.location.formatted_address}</div>
                     <div className="food-truck-schedule">Serving until {formatRelative(dateObject, new Date())}</div>
-                    <ul className="category-menu">
-                        {this.state.menu.map((category, key) =>
-                            <li key={`category-nav-${category.id}`}>
-                                <AnchorLink offset="60" href={`#${category.name.toLowerCase()}`}>
-                                    {category.name}
-                                </AnchorLink>
-                            </li>
-                        )}
-                    </ul>
+                </div>
+                <div className="category-menu-wrapper">
+                    <div className="container--order">
+                        <ul className="category-menu">
+                            {this.state.menu.map((category, key) =>
+                                <li key={`category-nav-${category.id}`}>
+                                    <AnchorLink offset="60" href={`#${category.name.toLowerCase()}`}>
+                                        {category.name}
+                                    </AnchorLink>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+                <div className="container--order">
                     <div className="menu">
                         {this.state.menu.map((category, key) =>
                             <div className="category" key={`category-${category.id}`}>

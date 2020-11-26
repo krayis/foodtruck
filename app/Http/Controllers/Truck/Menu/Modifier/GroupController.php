@@ -27,8 +27,7 @@ class GroupController extends Controller
         $user = Auth::user();
         $categories = ModifierGroup::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
-        ])->with('modifiers')->orderBy('name', 'asc')->get();
+        ])->with('modifiers')->orderBy('name', 'asc')->paginate(20);
         return view('truck.menu.modifier.group.index', compact('categories'));
     }
 
@@ -122,7 +121,6 @@ class GroupController extends Controller
                 ]);
             }
         }
-
         $group->update([
             'name' => $request->input('name'),
             'rule_condition' => $request->input('rule_condition'),
@@ -137,11 +135,10 @@ class GroupController extends Controller
 
     public function destroy(ModifierGroup $group)
     {
-        $group->update([
-            'deleted' => 1,
-        ]);
+        $groupId = $group->id;
+        $group->delete();
         Modifier::where([
-            'modifier_group_id' => $group->id
+            'modifier_group_id' => $groupId
         ])->update([
             'modifier_group_id' => null
         ]);

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import menuIcon from '../images/menu.svg';
 import AddressInput from './AddressInput';
 import CartContext from '../CartContext';
 import {
@@ -23,12 +24,12 @@ class Header extends Component {
             <div className="navbar">
                 {this.isCheckout() &&
                     <div className="container">
-                        <ul className="left">
-                            <li className="brand">
-                                <a href="/">Food<span>Truck</span>.am</a>
-                            </li>
+                        <div className="left">
+                            <div className="nav">
+                                <img src={menuIcon} />
+                            </div>
                             <AddressInput/>
-                        </ul>
+                        </div>
                         <ul className="right">
                             <li className="search-wrapper">
                                 <div className="search-wrapper-inner">

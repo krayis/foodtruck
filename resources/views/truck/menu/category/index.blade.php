@@ -39,6 +39,8 @@
         </tbody>
     </table>
 
+    {{ $categories->links() }}
+
     <script>
         $('.js-table-delete').on('click', function (e) {
             e.preventDefault();

@@ -11,6 +11,8 @@
             <ion-icon name="arrow-back"></ion-icon>
         </a>
         <div class="meta-buttons">
+            <button type="button" class="btn btn-grey" data-action="delete" data-target="delete-form">Delete
+            </button>
             <button class="btn btn-primary">Save</button>
         </div>
     </div>
@@ -81,6 +83,12 @@
         </div>
     </div>
 </form>
+<form action="{{ route('truck.settings.coupons.destroy',  $coupon->id) }}" id="delete-form"
+      style="display: none;"
+      method="POST">
+    @csrf
+    @method('DELETE')
+</form>
 <script>
     var typeInputs = $('[name="type"]');
     typeInputs.on('change', function () {
@@ -89,6 +97,13 @@
         $('#discount-' + typeInputs.filter(":checked").val()).css('display', 'block');
         $('#discount-' + typeInputs.filter(":checked").val()).find('input').prop('required', true);
 
+    });
+
+    $('[data-action="delete"]').on('click', function (e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete?')) {
+            $('#' + $(this).data('target')).submit();
+        }
     });
 </script>
 @endsection

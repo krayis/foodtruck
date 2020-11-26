@@ -25,8 +25,7 @@ class ModifierController extends Controller
         $user = Auth::user();
         $modifiers = Modifier::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
-        ])->with('group')->orderBy('sort_order', 'desc')->get();
+        ])->with('group')->orderBy('sort_order', 'desc')->paginate(20);
         return view('truck.menu.modifier.index', compact( 'modifiers'));
     }
 
@@ -35,17 +34,15 @@ class ModifierController extends Controller
         $user = Auth::user();
         $categories = ModifierGroup::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         return view('truck.menu.modifier.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'min:1', 'max:255'],
             'type' => ['required', 'in:0,1'],
-            'modifier_group_id' => ['required'],
             'min' => ['nullable', 'required_if:type,1', 'integer'],
             'max' => ['nullable', 'required_if:type,1', 'integer'],
             'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
@@ -74,7 +71,6 @@ class ModifierController extends Controller
         $user = Auth::user();
         $categories = ModifierGroup::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         return view('truck.menu.modifier.edit', compact('modifier', 'categories'));
     }
@@ -95,12 +91,9 @@ class ModifierController extends Controller
         return redirect()->back()->with('success', 'Modifier was successfully updated.');
     }
 
-
     public function destroy(Modifier $modifier)
     {
-        $modifier->update([
-            'deleted' => 1
-        ]);
+        $modifier->delete();
         return redirect()->back()->with('success', 'Modifier was successfully deleted.');
     }
 

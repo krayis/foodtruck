@@ -25,12 +25,10 @@ class ItemController extends Controller
         $user = Auth::user();
         $categories = MenuCategory::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('sort_order', 'desc')->get();
         $items = Item::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
-        ])->with('modifierGroups', 'category')->orderBy('sort_order', 'desc')->get();
+        ])->with('modifierGroups', 'category')->orderBy('sort_order', 'desc')->paginate(20);
         return view('truck.menu.item.index', compact('items', 'categories'));
     }
 
@@ -47,6 +45,7 @@ class ItemController extends Controller
             'name' => ['required', 'string', 'min:1', 'max:255'],
             'description' => ['max:255'],
             'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'thumbnail' => ['file' => 'max:1024']
         ]);
 
         $user = Auth::user();
@@ -54,7 +53,7 @@ class ItemController extends Controller
 
         if ($request->hasfile('thumbnail')) {
             $file = $request->file('thumbnail');
-            $path = Storage::disk('public')->put('thumbnails', $file);
+            $path = Storage::disk('s3')->put('thumbnails', $file);
         }
 
         Item::create([
@@ -85,45 +84,47 @@ class ItemController extends Controller
         $categories = MenuCategory::where('truck_id', $user->truck->id)->orderBy('sort_order', 'asc')->get();
         $modifierGroups = ModifierGroup::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->with('modifiers')->get();
         return view('truck.menu.item.edit', compact('item', 'categories', 'modifierGroups'));
     }
 
     public function update(Request $request, Item $item)
     {
-        $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
-            'description' => ['max:255'],
-            'price' => ['sometimes', 'required', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'category_id' => ['nullable', 'integer'],
-            'active' => ['in:0,1']
-        ]);
-
-        if ($request->hasfile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $path = Storage::disk('public')->put('thumbnails', $file);
-            $item->update([
-                'thumbnail' => $path,
+        if ($request->input('delete_thumbnail') == 1) {
+            Storage::disk('s3')->delete($item->thumbnail);
+            $item->thumbnail = null;
+            $item->save();
+        } else {
+            $request->validate([
+                'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
+                'description' => ['max:255'],
+                'price' => ['sometimes', 'required', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'category_id' => ['nullable', 'integer'],
+                'active' => ['in:0,1'],
+                'thumbnail' => ['file' => 'max:1024']
             ]);
-        }
 
-        $item->update($request->only(['name', 'price', 'description', 'category_id', 'active']));
-
-        $item->modifierGroups()->sync($request->input('modifier_groups'));
-
-        if (is_array($request->input('items'))) {
-            foreach ($request->input('items') as $category) {
-                ItemModifierGroup::where([
-                    'id' => $category['id']
-                ])->update([
-                    'sort_order' => $category['sort_order']
+            if ($request->hasfile('thumbnail')) {
+                $file = $request->file('thumbnail');
+                $path = Storage::disk('s3')->put('thumbnails', $file);
+                $item->update([
+                    'thumbnail' => $path,
                 ]);
             }
-        }
 
-        if ($request->input('out_of_stock')) {
+            $item->update($request->only(['name', 'price', 'description', 'category_id', 'active']));
 
+            $item->modifierGroups()->sync($request->input('modifier_groups'));
+
+            if (is_array($request->input('items'))) {
+                foreach ($request->input('items') as $category) {
+                    ModifierGroup::where([
+                        'id' => $category['id']
+                    ])->update([
+                        'sort_order' => $category['sort_order']
+                    ]);
+                }
+            }
         }
 
         return redirect()->route('truck.menu.item.edit', $item->id)->with('success', 'Item was successfully updated.');
@@ -131,9 +132,7 @@ class ItemController extends Controller
 
     public function destroy(Item $item)
     {
-        $item->update([
-            'deleted' => 1,
-        ]);
+        $item->delete();
         return redirect()->action('Truck\Menu\ItemController@index')->with('success', 'Item was successfully deleted.');
     }
 }

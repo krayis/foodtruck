@@ -1,3 +1,8 @@
+.category-menu-wrapper {
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+}
+
 .container--order {
     max-width: 980px;
     margin: 0 auto;
@@ -6,6 +11,7 @@
         font-size: 36px;
         font-weight: 400;
         margin: 45px 0 15px;
+        line-height: 1em;
     }
     .food-truck-address {
         margin-bottom: 0;
@@ -17,8 +23,6 @@
         list-style-type: none;
         margin: 0;
         padding: 0;
-        border-top: 1px solid #ebebeb;
-        border-bottom: 1px solid #ebebeb;
         @include clearfix;
         li {
             float: left;
