@@ -17,7 +17,7 @@ class Authenticate extends Middleware
         if (strpos($request->route()->getPrefix(), 'admin') !== false) {
             return route('merchant.login.index');
         } else if (! $request->expectsJson()) {
-            return route('login');
+            return route('merchant.login.index');
         }
     }
 }

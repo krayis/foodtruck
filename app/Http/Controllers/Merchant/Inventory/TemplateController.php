@@ -37,7 +37,6 @@ class TemplateController extends Controller
         $user = Auth::user();
         $items = Item::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         return view('merchant.inventory.templates.create', compact('items'));
     }
@@ -47,7 +46,6 @@ class TemplateController extends Controller
         $user = Auth::user();
         $items = Item::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         $inventoryItems = InventoryTemplateItems::where([
             ['inventory_template_id', $template->id],
@@ -85,7 +83,7 @@ class TemplateController extends Controller
             }
             InventoryTemplateItems::upsert($updates, ['inventory_template_id', 'item_id'], ['stock']);
         }
-        return redirect()->route('admin.inventory.templates.edit', $template->id)->with('success', 'Inventory was successfully updated.');
+        return redirect()->route('merchant.inventory.templates.edit', $template->id)->with('success', 'Inventory was successfully updated.');
     }
 
     public function store(Request $request)
@@ -110,12 +108,12 @@ class TemplateController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.inventory.templates.index')->with('success', 'Template was successfully created.');
+        return redirect()->route('merchant.inventory.templates.index')->with('success', 'Template was successfully created.');
 
     }
 
     public function destroy(InventoryTemplates $template) {
         $template->delete();
-        return redirect()->route('admin.inventory.templates.index')->with('success', 'Template was successfully deleted.');
+        return redirect()->route('merchant.inventory.templates.index')->with('success', 'Template was successfully deleted.');
     }
 }

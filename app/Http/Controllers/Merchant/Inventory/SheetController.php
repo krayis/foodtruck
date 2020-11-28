@@ -99,7 +99,7 @@ class SheetController extends Controller
             }
             InventorySheetItems::upsert($updates, ['inventory_sheet_id', 'item_id'], ['stock']);
         }
-        return redirect()->route('admin.inventory.sheets.edit', $sheet->id)->with('success', 'Inventory sheet was successfully updated.');
+        return redirect()->route('merchant.inventory.sheets.edit', $sheet->id)->with('success', 'Inventory sheet was successfully updated.');
     }
 
     public function store(Request $request)
@@ -124,7 +124,7 @@ class SheetController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.inventory.sheets.index')->with('success', 'Inventory sheet was successfully created.');
+        return redirect()->route('merchant.inventory.sheets.index')->with('success', 'Inventory sheet was successfully created.');
     }
 
     public function destroy(InventorySheets $sheet) {
@@ -132,7 +132,7 @@ class SheetController extends Controller
             $item->delete();
         }
         $sheet->delete();
-        return redirect()->route('admin.inventory.sheets.index')->with('success', 'Template sheet was successfully deleted.');
+        return redirect()->route('merchant.inventory.sheets.index')->with('success', 'Template sheet was successfully deleted.');
     }
 
 }
