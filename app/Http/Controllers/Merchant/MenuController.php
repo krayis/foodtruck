@@ -21,7 +21,7 @@ class MenuController extends Controller
         $user = Auth::user();
         $categories = MenuCategory::where('truck_id', $user->truck->id)->orderBy('sort_order', 'asc')->get();
         $itemCount = Item::where('truck_id', $user->truck->id)->count();
-        return view('truck/menu/index', compact('categories', 'itemCount'));
+        return view('merchant.menu.index', compact('categories', 'itemCount'));
     }
 
     public function store(Request $request) {

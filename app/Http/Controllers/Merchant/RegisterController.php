@@ -57,6 +57,6 @@ class RegisterController extends Controller
     public function index()
     {
         $timezones = Timezones::get();
-        return view('truck/register/index', compact('timezones'));
+        return view('merchant.register.index', compact('timezones'));
     }
 }

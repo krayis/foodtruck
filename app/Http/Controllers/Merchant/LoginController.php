@@ -35,6 +35,6 @@ class LoginController extends Controller
 
     public function index()
     {
-        return view('truck/login/index');
+        return view('merchant.login.index');
     }
 }

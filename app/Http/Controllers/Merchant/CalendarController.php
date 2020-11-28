@@ -27,14 +27,14 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        return view('truck/location/index');
+        return view('merchant/location/index');
     }
 
     public function create()
     {
 
         //https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyDEYtVHikZFHuE-2ffWRCc9fVxB5P68h8w
-        return view('truck/location/create');
+        return view('merchant.location.create');
     }
 
 }
