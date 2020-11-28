@@ -41,27 +41,27 @@
                         <p class="label-helper">What is the maximum number of items customers can select?</p>
                         <div class="form-inline">
                             <div class="form-group">
-                                <select class="form-control" name="rule_condition">
-                                    <option value="exact" {{ old('rule_condition') === 'exact' ? 'selected' : 'none' }}>Exactly</option>
-                                    <option value="range" {{ old('rule_condition') === 'range' ? 'selected' : 'none' }}>A Range</option>
+                                <select class="form-control" name="type">
+                                    <option value="EXACT" {{ old('type') === 'EXACT' ? 'selected' : 'none' }}>Exactly</option>
+                                    <option value="RANGE" {{ old('type') === 'RANGE' ? 'selected' : 'none' }}>A Range</option>
                                 </select>
-                                @error('rule_condition')
+                                @error('type')
                                 <div class="help-block" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </div>
                                 @enderror
                             </div>
                             <div class="form-group--input-range form-group form-group--label-start"
-                                 style="display: {{ old('rule_condition') === 'range' ? 'inline-block' : 'none' }}">
+                                 style="display: {{ old('type') === 'RANGE' ? 'inline-block' : 'none' }}">
                                 <span>Between</span>
                             </div>
                             <div class="form-group--input-range form-group"
-                                 style="display: {{ old('rule_condition') === 'range' ? 'inline-block' : 'none' }}">
+                                 style="display: {{ old('type') === 'RANGE' ? 'inline-block' : 'none' }}">
                                 <input type="text" class="form-control" placeholder="-" name="min_permitted"
                                        value="{{ old('min_permitted', 1) }}">
                             </div>
                             <div class="form-group--input-range form-group form-group--label-after"
-                                 style="display: {{ old('rule_condition') === 'range' ? 'inline-block' : 'none' }}">
+                                 style="display: {{ old('type') === 'RANGE' ? 'inline-block' : 'none' }}">
                                 <span>and</span>
                             </div>
                             <div class="form-group @error('max_permitted') has-error @enderror">
@@ -87,7 +87,7 @@
                     <div class="checkbox checkbox-input-inline">
                         <label>
                             <input type="checkbox" name="has_max_permitted"
-                                   value="1" {{ old('has_custom_range') === null  ? 'checked' : '' }}/>
+                                   value="1" {{ old('has_max_permitted') === null  ? 'checked' : '' }}/>
                             <strong>
                                 What's the maximum amount of modifiers a customer can select?
                             </strong>
@@ -139,10 +139,10 @@
             $('[name="min_permitted"]').val(1);
         });
 
-        $('[name="rule_condition"]').on('change', function () {
+        $('[name="type"]').on('change', function () {
             var $self = $(this);
             var value = $self.find(':selected').val();
-            if (value === 'exact') {
+            if (value === 'EXACT') {
                 $self.closest('.form-container').find('.form-group--input-range').hide();
             } else {
                 $self.closest('.form-container').find('.form-group--input-range').show();
@@ -162,7 +162,7 @@
                 $('[name="max_permitted_per_option"]').val(max);
             }
 
-            $('[name="rule_condition"]').trigger('change');
+            $('[name="type"]').trigger('change');
         });
         $(document).ready(function() {
             $('[name="has_custom_range"]').trigger('change');

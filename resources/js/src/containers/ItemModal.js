@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import CartContext from '../CartContext';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 function isModifierValid(itemModifiers, userModifiers) {
     let modifierIds = userModifiers.map(m => m.id);
@@ -90,16 +90,19 @@ class ItemModal extends Component {
         const categoryId = target.getAttribute('data-category');
         const name = target.getAttribute('data-name');
         const price = target.getAttribute('data-price');
+        const id = target.getAttribute('data-id');
         const value = parseInt(target.value);
         let modifiers = this.state.modifiers;
 
         const modifier = {
-            id: value,
-            name: name,
-            price: price,
-            categoryId: categoryId,
+            id,
+            quantity: value,
+            name,
+            price,
+            categoryId
         };
 
+        console.log(modifier)
         if (target.type === 'radio') {
             modifiers = modifiers.filter(m => m.categoryId !== categoryId);
             modifiers.push(modifier)
@@ -109,8 +112,13 @@ class ItemModal extends Component {
             if (target.checked) {
                 modifiers.push(modifier);
             } else {
-                modifiers = modifiers.filter(m => m.id !== value);
+                modifiers = modifiers.filter(m => m.id !== id);
             }
+        }
+
+        if (target.type === 'select-one') {
+            modifiers = modifiers.filter(m => m.id !== id);
+            modifiers.push(modifier)
         }
 
         this.setState({modifiers});
@@ -150,7 +158,13 @@ class ItemModal extends Component {
         }
         return price;
     }
-
+    buildOptions(modifier) {
+        var arr = [];
+        for (let i = modifier.min; i <= modifier.max; i++) {
+            arr.push(<option key={i} value={i}>{i}</option>)
+        }
+        return arr;
+    }
     render() {
         if (this.state.loading) {
             return (
@@ -163,7 +177,7 @@ class ItemModal extends Component {
                 </div>
             )
         }
-        const context = this.state.context;
+
         const item = this.state.item;
         return (
 
@@ -183,35 +197,58 @@ class ItemModal extends Component {
                                         <div className="item-modifier-category">
                                             {modifierCategory.name}
                                         </div>
-                                        {modifierCategory.modifier_category_type_id === 2 &&
+                                        {modifierCategory.type === 'EXACT' &&
                                         <div className="item-modifier-category-helper">
-                                            {modifierCategory.min === 0 && modifierCategory.max === 0 &&
-                                            <span> Select as many as you like</span>}
-                                            {modifierCategory.min === 0 && modifierCategory.max > 0 &&
-                                            <span> Choose up to {modifierCategory.max}</span>}
-                                            {modifierCategory.min > 0 && modifierCategory.max === 0 &&
-                                            <span> Choose a min of {modifierCategory.min}</span>}
-                                            {modifierCategory.min > 0 && modifierCategory.max > 0 &&
-                                            <span> Choose a min of {modifierCategory.min} and max of {modifierCategory.max}</span>}
+                                            <span>Please select {modifierCategory.max_permitted}</span>
+                                        </div>
+                                        }
+                                        {modifierCategory.type === 'OPTIONAL_MAX' &&
+                                        <div className="item-modifier-category-helper">
+                                            <span>Choose up to {modifierCategory.max_permitted_per_option}</span>
+                                        </div>
+                                        }
+                                        {modifierCategory.type === 'RANGE' &&
+                                        <div className="item-modifier-category-helper">
+                                            {modifierCategory.min_permitted === 0 && modifierCategory.max_permitted > 0 &&
+                                            <span>Choose up to {modifierCategory.max_permitted}</span>}
+                                            {modifierCategory.min_permitted === modifierCategory.max_permitted &&
+                                            <span>Choose {modifierCategory.max_permitted}</span>}
+                                            {modifierCategory.min_permitted !== modifierCategory.max_permitted && modifierCategory.min_permitted > 0 && modifierCategory.max_permitted > 0 &&
+                                            <span>Choose a min of {modifierCategory.min_permitted} and max of {modifierCategory.max_permitted}</span>}
                                         </div>
                                         }
                                         <div
-                                            className="item-modifier-type">{modifierCategory.modifier_category_type_id === 1 ? 'Required' : 'Optional'}</div>
+                                            className="item-modifier-type">{modifierCategory.type === 'OPTIONAL' ? 'Optional' : 'Required'}</div>
                                     </div>
                                     <ul>
                                         {modifierCategory.modifiers.map((modifier, key) =>
                                             <li key={`item-modifier-${key}`}>
+                                                {modifier.type === 'SINGLE' &&
                                                 <label>
                                                     <input
                                                         onChange={this.modifierUpdate}
                                                         name={`category-${modifierCategory.id}`}
-                                                        value={modifier.id}
+                                                        value={1}
+                                                        data-id={modifier.id}
                                                         data-name={modifier.name}
                                                         data-price={modifier.price}
                                                         data-category={modifierCategory.id}
                                                         required={modifierCategory.modifier_category_type_id === 1 ? 'required' : ''}
-                                                        type={modifierCategory.modifier_category_type_id === 1 ? 'radio' : 'checkbox'}/> {`${modifier.name}${modifier.price > 0 ? ` + $${modifier.price}` : ''}`}
+                                                        type={['EXACT', 'OPTIONAL_MAX'].includes(modifierCategory.type) && modifierCategory.max_permitted == 1 ? 'radio' : 'checkbox'}/> {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
                                                 </label>
+                                                }
+                                                {modifier.type === 'MULTIPLE' &&
+                                                <label>
+                                                    {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
+                                                    <select
+                                                        onChange={this.modifierUpdate}
+                                                        name={`category-${modifierCategory.id}`}
+                                                    >
+                                                        {this.buildOptions(modifier)}
+                                                    </select>
+                                                </label>
+                                                }
+
                                             </li>
                                         )}
                                     </ul>

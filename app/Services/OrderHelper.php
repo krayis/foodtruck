@@ -23,7 +23,6 @@ class OrderHelper
 
         $items = Item::where([
             ['active', 1],
-            ['deleted', 0],
             ['truck_id', $request->input('truck.id')]
         ])->whereIn('id', $itemIds)->get();
 
@@ -38,7 +37,6 @@ class OrderHelper
 
         $modifiers = Modifier::where([
             ['active', 1],
-            ['deleted', 0],
         ])->whereIn('id', $modifierIds)->get();
         foreach ($cart as $row) {
             foreach ($row['modifiers'] as $modifier) {

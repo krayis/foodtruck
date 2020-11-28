@@ -27,7 +27,6 @@ class TemplateController extends Controller
         $user = Auth::user();
         $inventories = InventoryTemplates::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0]
         ])->get();
         return view('truck.inventory.templates.index', compact('inventories'));
     }

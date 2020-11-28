@@ -27,7 +27,6 @@ class LocationController extends Controller
         $locations = Location::where([
             'user_id' => $user->id,
             'type' => 'PREDETERMINED',
-            'deleted' => 0,
         ])->paginate(20);
         return view('truck/location/index', compact('locations'));
     }

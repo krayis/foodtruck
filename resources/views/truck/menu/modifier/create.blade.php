@@ -56,15 +56,15 @@
                     <div><label>Item quantities</label></div>
                     <label class="radio-inline">
                         <input type="radio" name="type"
-                               value="0" {{ old('type') == '0' || !old('type') ? 'checked' : null }}> Single selection
+                               value="SINGLE" {{ old('type') == 'SINGLE' || !old('type') ? 'checked' : null }}> Single selection
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="1" {{ old('type') == '1' ? 'checked' : null }}> Multiple
+                        <input type="radio" name="type" value="MULTIPLE" {{ old('type') == 'MULTIPLE' ? 'checked' : null }}> Multiple
                         quantities
                     </label>
                     <input type="hidden" name="place_id" value="{{ old('place_id') }}"/>
                 </div>
-                <div id="multiple-view" style="display: {{ old('type') == 1 ? 'block' : 'none' }}">
+                <div id="multiple-view" style="display: {{ old('type') === 'MULTIPLE' ? 'block' : 'none' }}">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -109,7 +109,7 @@
         var typeInputs = $('[name="type"]');
         typeInputs.on('change', function () {
             $('#multiple-view').css('display', 'none');
-            if (typeInputs.filter(":checked").val() == 1) {
+            if (typeInputs.filter(":checked").val() == 'MULTIPLE') {
                 $('#multiple-view').css('display', 'block');
             }
         });

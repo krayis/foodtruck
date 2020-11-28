@@ -65,6 +65,7 @@ class CheckoutController extends Controller
         $startDateTime->setTimezone($timezone);
         $endDateTime = new Carbon($event->end_date_time);
         $endDateTime->setTimezone($timezone);
+
         if ($startDateTime->timestamp >= $now->timestamp || $now->timestamp >= $endDateTime->timestamp || $event === null) {
             return response()->json([
                 'error' => [
@@ -75,8 +76,8 @@ class CheckoutController extends Controller
 
         $location = Location::where([
             'id' => $event->location_id,
-            'deleted' => 0,
         ])->first();
+
         if ($location === null) {
             return response()->json([
                 'error' => [
@@ -94,7 +95,6 @@ class CheckoutController extends Controller
         }
         $items = Item::where([
             ['active', 1],
-            ['deleted', 0],
             ['truck_id', $truck->id]
         ])->whereIn('id', $itemIds)->get();
 
@@ -236,7 +236,7 @@ class CheckoutController extends Controller
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],
             ])->first();
 
-//        dd($order->event_id);
+
         if ($event === null) {
 
         }
@@ -250,7 +250,6 @@ class CheckoutController extends Controller
         ];
 
         $location = Location::where([
-            ['deleted', 0],
             ['id', $event->location_id]
         ])->first();
 

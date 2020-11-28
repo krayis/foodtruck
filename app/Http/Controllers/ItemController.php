@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    public function index(Request $request, Item $item)
+    public function index(Item $item)
     {
-        if ($item->active === 0 || $item->deleted === 1) {
+        if ($item->active === 0) {
             return response()->json([
                 'error' => [
                     'message' => 'Item is no longer available.'
@@ -43,7 +43,6 @@ class ItemController extends Controller
 
         $event = Event::select('id', 'location_id', DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '" . $offset . "') as start_date_time"), DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '" . $offset . "') as end_date_time"))->where([
             ['truck_id', $item->truck_id],
-            ['deleted', 0],
             [DB::raw("CONVERT_TZ(start_date_time, '+00:00' , '" . $offset . "')"), '<=', $now],
             [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '" . $offset . "')"), '>=', $now],
         ])->first();
@@ -66,20 +65,21 @@ class ItemController extends Controller
         ];
 
         foreach ($item->modifierGroups as $modifierCategory) {
-            if ($modifierCategory->active !== 1 && $modifierCategory->deleted !== 0) {
+            if ($modifierCategory->active !== 1) {
                 continue;
             }
             $category = [
                 'id' => $modifierCategory->id,
                 'name' => $modifierCategory->name,
-                'min' => $modifierCategory->min,
-                'max' => $modifierCategory->max,
-                'modifier_category_type_id' => $modifierCategory->modifier_category_type_id,
+                'min_permitted' => $modifierCategory->min_permitted,
+                'max_permitted' => $modifierCategory->max_permitted,
+                'max_permitted_per_option' => $modifierCategory->max_permitted_per_option,
+                'type' => $modifierCategory->type,
                 'modifiers' => []
             ];
 
             foreach ($modifierCategory->modifiers as $modifier) {
-                if ($modifier->active !== 1 && $modifier->deleted !== 0) {
+                if ($modifier->active !== 1) {
                     continue;
                 }
                 $modifier = [

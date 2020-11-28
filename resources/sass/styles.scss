@@ -68,7 +68,18 @@ $brand-blue: #3830e7;
         min-height: 40px;
         padding: 0 30px;
     }
-
+    .brand {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        a {
+            font-weight: bold;
+            color: #ff0102;
+            text-decoration: none;
+        }
+    }
     .container {
         @include clearfix;
         .left, ul.right {

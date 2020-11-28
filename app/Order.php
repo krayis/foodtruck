@@ -12,11 +12,13 @@ class Order extends Model
     const STATUS_READY= 4;
     const STATUS_FULFILLED = 5;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+//    protected $casts = [
+//        'tax_total' => 'float',
+//        'sub_total' => 'float',
+//        'tip' => 'float',
+//        'grand_total' => 'float'
+//    ];
+
     protected $fillable = [
         'truck_id', 'event_id', 'uuid', 'tax', 'tip', 'sub_total', 'tax_total', 'grand_total', 'status', 'pickup_at'
     ];

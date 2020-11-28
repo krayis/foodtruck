@@ -19,7 +19,6 @@ class CouponController extends Controller
         $user = Auth::user();
         $coupons = Coupon::where([
             ['user_id', $user->id],
-            ['deleted', 0],
         ])->get();
         return view('truck.settings.coupon.index', compact('coupons'));
     }
@@ -86,9 +85,7 @@ class CouponController extends Controller
 
     public function destroy(Request $request, Coupon $coupon)
     {
-        $coupon->update([
-            'deleted' => 1,
-        ]);
+        $coupon->delete();
         return redirect()->route('truck.settings.coupons.index')->with('success', 'Coupon was successfully deleted.');
     }
 }

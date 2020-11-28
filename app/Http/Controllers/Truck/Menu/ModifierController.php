@@ -42,9 +42,9 @@ class ModifierController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'min:1', 'max:255'],
-            'type' => ['required', 'in:0,1'],
-            'min' => ['nullable', 'required_if:type,1', 'integer'],
-            'max' => ['nullable', 'required_if:type,1', 'integer'],
+            'type' => ['required', 'in:SINGLE,MULTIPLE'],
+            'min' => ['nullable', 'required_if:type,MULTIPLE', 'integer'],
+            'max' => ['nullable', 'required_if:type,MULTIPLE', 'integer'],
             'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
         ]);
 
@@ -77,16 +77,15 @@ class ModifierController extends Controller
 
     public function update(Request $request, Modifier $modifier)
     {
-        $validate = $request->validate([
+        $request->validate([
             'name' => ['sometimes', 'required', 'string', 'min:1', 'max:255'],
-            'type' => ['sometimes', 'required', 'in:0,1'],
+            'type' => ['required', 'in:SINGLE,MULTIPLE'],
             'modifier_group_id' => ['sometimes', 'required'],
             'min' => ['nullable', 'required_if:type,1', 'integer'],
             'max' => ['nullable', 'required_if:type,1', 'integer'],
             'price' => ['sometimes', 'required', 'regex:/^\d+(\.\d{1,2})?$/'],
             'active' => ['in:0,1']
         ]);
-
         $modifier->update($request->only('name', 'type', 'modifier_group_id', 'min', 'max', 'price', 'active'));
         return redirect()->back()->with('success', 'Modifier was successfully updated.');
     }
@@ -94,7 +93,7 @@ class ModifierController extends Controller
     public function destroy(Modifier $modifier)
     {
         $modifier->delete();
-        return redirect()->back()->with('success', 'Modifier was successfully deleted.');
+        return redirect()->route('truck.menu.modifier.index')->with('success', 'Modifier was successfully deleted.');
     }
 
 }

@@ -71,6 +71,9 @@ class Header extends Component {
                         </ul>
                     </div>
                 }
+                <div className="brand">
+                    <Link to={`/`}>FoodTruck.am</Link>
+                </div>
             </div>
         );
     }

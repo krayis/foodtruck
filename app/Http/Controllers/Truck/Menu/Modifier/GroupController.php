@@ -45,18 +45,18 @@ class GroupController extends Controller
             'max_permitted_per_option' => ['nullable','required_if:has_max_permitted,1', 'min:0', 'not_in:0', 'integer'],
             'has_max_permitted' => ['nullable', 'boolean'],
             'has_custom_range' => ['nullable', 'boolean'],
-            'rule_condition' => ['required', Rule::in(['range', 'exact'])],
+            'type' => ['required', Rule::in(['RANGE', 'EXACT'])],
         ]);
 
         $user = Auth::user();
 
         if ($request->input('has_custom_range') === null && $request->input('has_max_permitted') === null) {
-            $request->merge(['rule_condition' => 'optional']);
+            $request->merge(['type' => 'OPTIONAL']);
 
         }
         if ($request->input('has_max_permitted')) {
             $request->merge(['max_permitted_per_option' => $request->input('max_permitted_per_option')]);
-            $request->merge(['rule_condition' => 'optional_max']);
+            $request->merge(['type' => 'OPTIONAL_MAX']);
         }
         if ($request->input('has_custom_range')) {
             $request->merge(['max_permitted_per_option' => $request->input('max_permitted')]);
@@ -66,7 +66,7 @@ class GroupController extends Controller
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
             'name' => $request->input('name'),
-            'rule_condition' => $request->input('rule_condition'),
+            'type' => $request->input('type'),
             'min_permitted' => $request->input('min_permitted'),
             'max_permitted' => $request->input('max_permitted'),
             'max_permitted_per_option' => $request->input('max_permitted_per_option'),
@@ -96,16 +96,16 @@ class GroupController extends Controller
             'max_permitted_per_option' => ['nullable','required_if:has_max_permitted,1', 'min:0', 'not_in:0', 'integer'],
             'has_max_permitted' => ['nullable', 'boolean'],
             'has_custom_range' => ['nullable', 'boolean'],
-            'rule_condition' => ['required', Rule::in(['range', 'exact'])],
+            'type' => ['required', Rule::in(['RANGE', 'EXACT', 'OPTIONAL'])],
         ]);
 
         $user = Auth::user();
 
         if ($request->input('has_custom_range') === null && $request->input('has_max_permitted') === null) {
-            $request->merge(['rule_condition' => 'optional']);
+            $request->merge(['type' => 'OPTIONAL']);
         }
         if ($request->input('has_max_permitted')) {
-            $request->merge(['rule_condition' => 'optional_max']);
+            $request->merge(['type' => 'OPTIONAL_MAX']);
         }
         if ($request->input('has_custom_range')) {
             $request->merge(['max_permitted_per_option' => $request->input('max_permitted')]);
@@ -123,7 +123,7 @@ class GroupController extends Controller
         }
         $group->update([
             'name' => $request->input('name'),
-            'rule_condition' => $request->input('rule_condition'),
+            'type' => $request->input('type'),
             'min_permitted' => $request->input('min_permitted'),
             'max_permitted' => $request->input('max_permitted'),
             'max_permitted_per_option' => $request->input('max_permitted_per_option'),

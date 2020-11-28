@@ -79,46 +79,28 @@ class CheckoutPage extends Component {
 
     handleTipChange(e) {
         const target = e.target;
-        let tip = this.state.order.tip;
-
-        if ((target.type === 'radio' && target.value !== 'other') || target.type === 'text') {
-            tip = target.value;
+        const tip = target.value;
+        const state = Object.assign({}, this.state);
+        state.order.tip = Number(tip.replace(/[^0-9.-]+/g,"")).toFixed(2);
+        if (target.type === 'radio' && target.value !== 'other') {
             this.setState({
-                input: {
-                    tip
-                },
+                ...state,
+                custom_tip: false,
+            });
+        } else if (target.type === 'radio' && target.value === 'other') {
+            this.setState({
+                ...state,
+                custom_tip: true,
+            });
+        } else if (target.type === 'text') {
+            this.setState({
+                custom_tip: false,
+                ...state,
             });
         }
-
         axios.post(`/api/checkout/${this.props.match.params.id}`,{
             _method: 'PATCH',
             tip: tip,
-        }).then((response) => {
-            if (target.type === 'radio' && target.value !== 'other') {
-                this.setState({
-                    ...response.data,
-                    custom_tip: false,
-                    input: {
-                        tip: response.data.order.tip
-                    },
-                });
-            } else if (target.type === 'radio' && target.value === 'other') {
-                this.setState({
-                    ...response.data,
-                    custom_tip: true,
-                    input: {
-                        tip: response.data.order.tip
-                    }
-                });
-            } else if (target.type === 'text') {
-                this.setState({
-                    ...response.data,
-                    tip: target.value,
-                    input: {
-                        tip: response.data.order.tip
-                    }
-                });
-            }
         });
     }
 
@@ -231,6 +213,10 @@ class CheckoutPage extends Component {
 
     tipActive(tip) {
         return this.state.order.tip == tip;
+    }
+
+    calculateGrandTotal() {
+        return this.state.order.sub_total + this.state.order.tax_total + this.state.order.tip;
     }
 
     render() {
@@ -374,7 +360,7 @@ class CheckoutPage extends Component {
                             <tbody>
                                 <tr className="total">
                                     <th align="left">Total</th>
-                                    <td align="right">${this.state.order.grand_total}</td>
+                                    <td align="right">${this.calculateGrandTotal()}</td>
                                 </tr>
                             </tbody>
 

@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 class MenuCategory extends Model
 {
     protected $fillable = [
-        'truck_id', 'user_id', 'name', 'description', 'active', 'sort_order', 'deleted'
+        'truck_id', 'user_id', 'name', 'description', 'active', 'sort_order'
     ];
 
     public function items() {

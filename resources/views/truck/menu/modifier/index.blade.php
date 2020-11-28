@@ -28,8 +28,8 @@
                     <td><a href="{{ route('truck.menu.modifier.edit', $modifier->id) }}">{{$modifier->name}}</a></td>
                     <td>{{ $modifier->group ? $modifier->group->name : null }}</td>
                     <td class="white-space--nowrap">
-                        @if($modifier->type === 1)
-                            {{$modifier->min}}-{{$modifier->max}}
+                        @if($modifier->type === 'MULTIPLE')
+                            Multiple: {{$modifier->min}}-{{$modifier->max}}
                         @else
                             Single Selection
                         @endif

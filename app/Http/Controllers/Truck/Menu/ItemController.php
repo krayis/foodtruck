@@ -9,8 +9,9 @@ use App\MenuCategory;
 use App\Item;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\InventorySheetItems;
+use App\InventoryTemplateItems;
 
 class ItemController extends Controller
 {
@@ -133,6 +134,8 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
+        InventorySheetItems::where('item_id', $item->id)->delete();
+        InventoryTemplateItems::where('item_id', $item->id)->delete();
         return redirect()->action('Truck\Menu\ItemController@index')->with('success', 'Item was successfully deleted.');
     }
 }

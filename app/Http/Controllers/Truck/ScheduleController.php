@@ -21,7 +21,6 @@ class ScheduleController extends Controller
         $events = Event::where([
             ['user_id', $user->id],
             ['type', 'PREDETERMINED'],
-            ['deleted', 0],
         ])->with('location')->paginate(20);
         $timezone = $user->timezone;
         return view('truck.schedule.index', compact('events', 'timezone'));
@@ -33,7 +32,6 @@ class ScheduleController extends Controller
         $locations = Location::where([
             ['user_id', $user->id],
             ['type', 'PREDETERMINED'],
-            ['deleted', 0]
         ])->get();
         return view('truck.schedule.create', compact('locations'));
     }

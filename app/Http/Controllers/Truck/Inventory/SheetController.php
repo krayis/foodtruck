@@ -39,7 +39,6 @@ class SheetController extends Controller
         $user = Auth::user();
         $items = Item::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         $templates = InventoryTemplates::where([
             ['truck_id', $user->truck->id]
@@ -53,7 +52,6 @@ class SheetController extends Controller
         $offset = $user->tz->gmtOffset();
         $events = Event::where([
                 ['user_id', '=', $user->id],
-                ['deleted', 0],
                 [DB::raw("CONVERT_TZ(end_date_time, '+00:00' , '". $offset ."')"), '>=', $carbon->format('Y-m-d H:i:s')],
             ])->get();
         return view('truck.inventory.sheets.create', compact('items','timezone', 'events', 'templates', 'template'));
@@ -64,7 +62,6 @@ class SheetController extends Controller
         $user = Auth::user();
         $items = Item::where([
             ['truck_id', $user->truck->id],
-            ['deleted', 0],
         ])->orderBy('name', 'asc')->get();
         $sheetItems = InventorySheetItems::where([
             ['inventory_sheet_id', $sheet->id],

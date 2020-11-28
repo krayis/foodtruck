@@ -7,10 +7,16 @@
             <p class="alert alert-{{ $message }}">{{ Session::get($message) }}</p>
         @endif
     @endforeach
-
     <div class="page-header">
         <h1>Orders</h1>
-
+        <div class="page-action">
+            <input class="form-control" placeholder="Search..."/>
+            <label>Filter by: </label>
+            <select class="form-control">
+                <option value="">Unfulfilled Orders</option>
+                <option value="">All Orders</option>
+            </select>
+        </div>
     </div>
 
     <table class="table">
@@ -26,7 +32,7 @@
         <tbody>
         @foreach($orders as $order)
             <tr class="order-list">
-                <td><a href="{{$order->id}}">{{$order->id}}</a></td>
+                <td><a href="{{route('truck.orders.edit', $order->id)}}">{{$order->id}}</a></td>
                 <td>Jose DeLeon</td>
                 <td>
                     <table class="table table-condensed table-bordered">

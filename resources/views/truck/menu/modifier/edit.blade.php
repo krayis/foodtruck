@@ -57,19 +57,24 @@
                     </div>
                     @enderror
                 </div>
-                <div class="form-group">
+                <div class="form-group @error('type') has-error @enderror">
                     <div><label>Item quantities</label></div>
                     <label class="radio-inline">
                         <input type="radio" name="type"
-                               value="0" {{ $modifier->type === 0 ? 'checked' : null }}> Single selection
+                               value="SINGLE" {{ $modifier->type === 'SINGLE' ? 'checked' : null }}> Single selection
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="type" value="1" {{ $modifier->type === 1 ? 'checked' : null }}> Multiple
+                        <input type="radio" name="type" value="MULTIPLE" {{ $modifier->type === 'MULTIPLE' ? 'checked' : null }}> Multiple
                         quantities
                     </label>
+                    @error('type')
+                    <div class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                    @enderror
                     <input type="hidden" name="place_id" value="{{ old('place_id') }}"/>
                 </div>
-                <div id="multiple-view" style="display: {{ $modifier->type == 1 ? 'block' : 'none' }}">
+                <div id="multiple-view" style="display: {{ $modifier->type === 'MULTIPLE' ? 'block' : 'none' }}">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -110,12 +115,24 @@
         </div>
     </div>
 </form>
+<form action="{{ route('truck.menu.modifier.destroy', $modifier->id) }}" style="display: none;" id="delete-form"
+      method="POST">
+    @csrf
+    @method('DELETE')
+</form>
+
 <script>
     var typeInputs = $('[name="type"]');
     typeInputs.on('change', function () {
         $('#multiple-view').css('display', 'none');
-        if (typeInputs.filter(":checked").val() == 1) {
+        if (typeInputs.filter(":checked").val() === 'MULTIPLE') {
             $('#multiple-view').css('display', 'block');
+        }
+    });
+    $('[data-action="delete"]').on('click', function (e) {
+        e.preventDefault();
+        if (confirm('Are you sure you want to delete?')) {
+            $('#' + $(this).data('target')).submit();
         }
     });
 </script>
