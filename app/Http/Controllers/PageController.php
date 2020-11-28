@@ -8,6 +8,6 @@ class PageController extends Controller
 {
     public function partner()
     {
-        return view('truck.index');
+        return view('merchant.index');
     }
 }
