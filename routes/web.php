@@ -61,7 +61,7 @@ Route::group(['middleware' => ['api']], function () {
 
 Route::get('api/truck/{truck}', 'TruckController@index')->name('api.truck');
 Route::get('checkout/{id}', 'SearchController@index')->name('search.index');
-Route::get('menu/{id}', 'SearchController@index')->name('search.index');
+Route::get('store/{id}', 'SearchController@index')->name('search.index');
 Route::resource('api/checkout', 'CheckoutController');
 Route::get('search', 'SearchController@index')->name('search.index');
 Route::post('merchant/logout', 'Merchant\LoginController@logout')->name('merchant.logout');

@@ -95,29 +95,13 @@ class ScheduleController extends Controller
         $user = Auth::user();
 
         if ($request->input('location') === 'save') {
-            $location_id = $request->input('location_id');
-        } else if ($request->input('location') === 'new') {
-            $apiKey = config('app.google_api_key');
-            $url = sprintf('https://maps.googleapis.com/maps/api/place/details/json?place_id=%s&key=%s',
-                $request->input('place_id'),
-                $apiKey
-            );
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', $url);
-            $response = $response->getBody()->getContents();
-            $place = json_decode($response, true);
-            $user = Auth::user();
-            $location = Location::create([
-                'truck_id' => $user->truck->id,
-                'user_id' => $user->id,
-                'name' => $place['result']['name'],
-                'formatted_address' => $place['result']['formatted_address'],
-                'latitude' => $place['result']['geometry']['location']['lat'],
-                'longitude' => $place['result']['geometry']['location']['lng'],
-                'note' => $request->input('note'),
-                'payload' => json_encode($place),
-            ]);
-            $location_id = $location->id;
+            $locationId = $request->input('location_id');
+        }
+
+        if ($request->input('location') === 'new') {
+            $place = LocationManager::getByPlaceId($request->input('place_id'));
+            $location = LocationManager::create($user, $place, $request->input('note'), 'PREDETERMINED');
+            $locationId = $location->id;
         }
 
         $startDateTime = Carbon::createFromFormat('m/d/Y h:i a', $request->input('date') . ' ' . $request->input('start_time'), $user->timezone);
@@ -126,9 +110,9 @@ class ScheduleController extends Controller
         Event::create([
             'truck_id' => $user->truck->id,
             'user_id' => $user->id,
-            'location_id' => $location_id,
+            'location_id' => $locationId,
             'type' => 'PREDETERMINED',
-            'preorder' => ['in:1'],
+            'preorder' => $request->input('preorder') ? 1 : 0,
             'start_date_time' => $startDateTime->tz('UTC')->format('Y-m-d H:i:s'),
             'end_date_time' => $endDateTime->tz('UTC')->format('Y-m-d H:i:s'),
         ]);

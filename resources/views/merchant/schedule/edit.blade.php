@@ -82,7 +82,7 @@
                         <select class="form-control" name="location_id">
                             @foreach($locations as $location)
                                 <option
-                                    value="{{ $location->id }}" {{ $schedule->location_id == $location->id ? 'checked' : null}}>
+                                    value="{{ $location->id }}" {{ $schedule->location_id == $location->id ? 'selected' : null}}>
                                     {{ strpos($location->formatted_address, $location->name) === false ?  $location->name . ', ' . $location->formatted_address: $location->formatted_address }}
                                 </option>
                             @endforeach

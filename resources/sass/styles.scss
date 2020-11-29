@@ -314,6 +314,7 @@ $brand-blue: #3830e7;
                 margin: 0;
                 padding: 0;
                 display: inline-block;
+                line-height: 28px;
             }
 
             form {
@@ -342,21 +343,20 @@ ul.truck-list {
     list-style-type: none;
 
     li {
-        border: 1px solid #e2e2e2;
-
-        &:hover {
-            border: 1px solid #202020;
-            transition: border-color ease-out 300ms;
-        }
-
-        padding: 16px;
-        border-radius: 2px;
         margin-bottom: 30px;
 
         a {
             display: block;
             text-decoration: none;
+            border: 1px solid #e2e2e2;
 
+            &:hover {
+                border: 1px solid #202020;
+                transition: border-color ease-out 300ms;
+            }
+
+            padding: 16px;
+            border-radius: 2px;
             .truck-name {
                 font-size: 24px;
                 color: #000000;

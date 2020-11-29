@@ -9,7 +9,7 @@ class Routes extends Component {
         return (
             <Switch>
                 <Route path="/checkout/:id" component={CheckoutPage} />
-                <Route path="/menu/:id" component={OrderPage} />
+                <Route path="/store/:id" component={OrderPage} />
                 <Route path="/" component={SearchPage} />
             </Switch>
         )

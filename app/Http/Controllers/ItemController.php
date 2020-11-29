@@ -89,6 +89,7 @@ class ItemController extends Controller
                     'min' => $modifier->min,
                     'max' => $modifier->max,
                     'type' => $modifier->type,
+                    'modifier_group_id' => $modifier->modifier_group_id,
                 ];
                 array_push($category['modifiers'], $modifier);
             }

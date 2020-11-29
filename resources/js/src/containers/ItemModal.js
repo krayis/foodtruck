@@ -159,7 +159,7 @@ class ItemModal extends Component {
         return price;
     }
     buildOptions(modifier) {
-        var arr = [];
+        const arr = [];
         for (let i = modifier.min; i <= modifier.max; i++) {
             arr.push(<option key={i} value={i}>{i}</option>)
         }
@@ -232,7 +232,7 @@ class ItemModal extends Component {
                                                         data-id={modifier.id}
                                                         data-name={modifier.name}
                                                         data-price={modifier.price}
-                                                        data-category={modifierCategory.id}
+                                                        data-category={modifier.modifier_group_id}
                                                         required={modifierCategory.modifier_category_type_id === 1 ? 'required' : ''}
                                                         type={['EXACT', 'OPTIONAL_MAX'].includes(modifierCategory.type) && modifierCategory.max_permitted == 1 ? 'radio' : 'checkbox'}/> {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
                                                 </label>
@@ -243,6 +243,11 @@ class ItemModal extends Component {
                                                     <select
                                                         onChange={this.modifierUpdate}
                                                         name={`category-${modifierCategory.id}`}
+                                                        value={1}
+                                                        data-id={modifier.id}
+                                                        data-name={modifier.name}
+                                                        data-price={modifier.price}
+                                                        data-category={modifier.modifier_group_id}
                                                     >
                                                         {this.buildOptions(modifier)}
                                                     </select>
