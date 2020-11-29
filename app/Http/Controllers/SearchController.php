@@ -80,7 +80,7 @@ class SearchController extends Controller
                     'message' => 'Invalid request',
                     'errors' => $validator->errors()
                 ]
-            ]);
+            ], 400);
         }
 
         if (!$request->has('distance') || $request->input('distance') > 100) {

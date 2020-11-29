@@ -72,7 +72,7 @@ class Header extends Component {
                     </div>
                 }
                 <div className="brand">
-                    <Link to={`/`}>FoodTruck.am</Link>
+                    <Link to={`/search`}>FoodTruck.am</Link>
                 </div>
             </div>
         );

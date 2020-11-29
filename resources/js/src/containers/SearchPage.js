@@ -13,6 +13,7 @@ class SearchPage extends Component {
         this.state = {
             trucks: [],
             loading: true,
+            error: false,
         };
         this.fetchData();
     }
@@ -20,13 +21,15 @@ class SearchPage extends Component {
     fetchData() {
         const params = queryString.parse(location.search);
         axios.get(`/api/search/trucks`, {params}).then(response => {
-            if (response.data.error) {
-                return false;
-            }
             this.setState({
                 trucks: response.data,
                 loading: false,
+                error: false,
             })
+        }).catch(err => {
+            this.setState({
+                error: true,
+            });
         });
     }
 
@@ -34,14 +37,8 @@ class SearchPage extends Component {
         if (this.props.location.search !== prevProps.location.search) {
             this.setState({
                 loading: true,
-            })
-            const params = queryString.parse(location.search);
-            axios.get(`/api/search/trucks`, {params}).then(response => {
-                this.setState({
-                    trucks: response.data,
-                    loading: false,
-                })
             });
+            this.fetchData();
         }
     }
 
@@ -80,7 +77,7 @@ class SearchPage extends Component {
                         <li><Skeleton height={80}/></li>
                     </React.Fragment>
                     }
-                    {this.state.loading === false && this.state.trucks.map((item, key) =>
+                    {this.state.error === false && this.state.loading === false && this.state.trucks.map((item, key) =>
                         <li key={key}>
                             <Link to={`/store/${item.truck_id}`}>
                                 {item.truck.thumbnails &&

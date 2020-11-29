@@ -47,6 +47,11 @@ const AddressInputDropdown = (props) => {
         toggleDropdown();
     }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        this.confirmAddress();
+    }
+
     return (
         <li className={`address-wrapper ${isComponentVisible ? 'active' : ''}`} ref={ref}>
             <div className="address-inner">
@@ -60,7 +65,7 @@ const AddressInputDropdown = (props) => {
             {isComponentVisible && (
                 <div className='dropdown'>
                     <label htmlFor="input-address">Search for an address</label>
-                    <form className="dropdown--input" autoComplete="off">
+                    <form className="dropdown--input" autoComplete="off" onSubmit={handleSubmit}>
                         <i className="icon ion-ios-pin"></i>
                         <Autosuggest
                             suggestions={props.suggestions}
