@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {
     Link
 } from "react-router-dom";
-import Skeleton from 'react-loading-skeleton';
 import axios from 'axios';
+import Skeleton from 'react-loading-skeleton';
 import queryString from 'query-string';
 
 
@@ -71,6 +71,7 @@ class SearchPage extends Component {
                 <ul className="truck-list">
                     {this.state.loading &&
                     <React.Fragment>
+                        <li><Skeleton height={80}/></li>
                         <li><Skeleton height={80}/></li>
                         <li><Skeleton height={80}/></li>
                         <li><Skeleton height={80}/></li>
