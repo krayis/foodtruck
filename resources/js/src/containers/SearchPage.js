@@ -32,10 +32,14 @@ class SearchPage extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.location.search !== prevProps.location.search) {
+            this.setState({
+                loading: true,
+            })
             const params = queryString.parse(location.search);
             axios.get(`/api/search/trucks`, {params}).then(response => {
                 this.setState({
                     trucks: response.data,
+                    loading: false,
                 })
             });
         }
