@@ -7,6 +7,7 @@ import urlSlug from 'url-slug';
 import {format, formatDistance, formatRelative, subDays} from 'date-fns'
 import ItemModal from './ItemModal';
 
+
 class OrderPage extends Component {
 
     constructor(props) {

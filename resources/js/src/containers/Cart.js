@@ -16,7 +16,6 @@ const defaultStyle = {
 
 const transitionStyles = {
     entering: {
-        // transform: `translate3d(0%, 0px, 0px) scale(1)`
     },
     entered: {
         transform: `translate3d(0%, 0px, 0px) scale(1)`
