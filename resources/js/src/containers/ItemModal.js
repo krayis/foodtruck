@@ -4,6 +4,46 @@ import Skeleton from 'react-loading-skeleton';
 import CartContext from '../CartContext';
 import {v4 as uuidv4} from 'uuid';
 
+const duration = 225;
+
+const overlayDefaultStyle = {
+    opacity: 0,
+    transition: `opacity ${duration}ms linear 0s`,
+};
+
+const overlayTransitionStyles = {
+    entering: {},
+    entered: {
+        opacity: 1,
+    },
+    exiting: {
+        opacity: 0,
+    },
+    exited: {
+        opacity: 0,
+    },
+};
+
+const modalDefaultStyle = {
+    opacity: 0,
+    transition: `transform ${duration}ms ease-in-out 0s, opacity ${duration}ms linear 0s`,
+    transform: `translate3d(0px, 0px, 0px) scale(.95)`
+};
+
+const modalTransitionStyles = {
+    entering: {},
+    entered: {
+        transform: `translate3d(0px, 0px, 0px) scale(1)`,
+        opacity: 1,
+    },
+    exiting: {
+        transform: `translate3d(0px, 0px, 0px) scale(.8)`
+    },
+    exited: {
+        transform: `translate3d(0px, 0px, 0px) scale(.8)`
+    },
+};
+
 function isModifierValid(itemModifiers, userModifiers) {
     let modifierIds = userModifiers.map(m => m.id);
     let validModifierIds = itemModifiers.modifiers.map(m => m.id);
@@ -159,6 +199,7 @@ class ItemModal extends Component {
         }
         return price;
     }
+
     buildOptions(modifier) {
         const arr = [];
         for (let i = modifier.min; i <= modifier.max; i++) {
@@ -166,118 +207,130 @@ class ItemModal extends Component {
         }
         return arr;
     }
+
     render() {
         const item = this.state.item;
         const loading = this.state.loading;
+        const state = this.props.state;
         return (
-            <div className="item-modal-container">
-                <div className="item-modal">
-                    <form onSubmit={this.onSubmit}>
-                        <div className="item-modal-content">
-                            <div onClick={this.props.closeModal} className="top-close-button"><i
-                                className="icon ion-ios-close-circle"></i></div>
-                            <h1>{loading ? <Skeleton width={170}/> : item.name}</h1>
-                            {loading ? <Skeleton width={170}/> : (item.description && <p>{item.description}</p>)}
-                            {loading ? '': item.thumbnail && <img src={`/storage/${item.thumbnail}`}/>}
-                            {!loading && item.modifier_categories.length > 0 &&
-                            item.modifier_categories.map((modifierCategory, key) =>
-                                <div className="item-meta" key={`item-modifier-category-${key}`}>
-                                    <div className="item-modifier-heading">
-                                        <div className="item-modifier-category">
-                                            {modifierCategory.name}
-                                        </div>
-                                        {modifierCategory.type === 'EXACT' &&
-                                        <div className="item-modifier-category-helper">
-                                            <span>Please select {modifierCategory.max_permitted}</span>
-                                        </div>
-                                        }
-                                        {modifierCategory.type === 'OPTIONAL_MAX' &&
-                                        <div className="item-modifier-category-helper">
-                                            <span>Choose up to {modifierCategory.max_permitted_per_option}</span>
-                                        </div>
-                                        }
-                                        {modifierCategory.type === 'RANGE' &&
-                                        <div className="item-modifier-category-helper">
-                                            {modifierCategory.min_permitted === 0 && modifierCategory.max_permitted > 0 &&
-                                            <span>Choose up to {modifierCategory.max_permitted}</span>}
-                                            {modifierCategory.min_permitted === modifierCategory.max_permitted &&
-                                            <span>Choose {modifierCategory.max_permitted}</span>}
-                                            {modifierCategory.min_permitted !== modifierCategory.max_permitted && modifierCategory.min_permitted > 0 && modifierCategory.max_permitted > 0 &&
-                                            <span>Choose a min of {modifierCategory.min_permitted} and max of {modifierCategory.max_permitted}</span>}
-                                        </div>
-                                        }
-                                        <div
-                                            className="item-modifier-type">{modifierCategory.type === 'OPTIONAL' ? 'Optional' : 'Required'}</div>
-                                    </div>
-                                    <ul>
-                                        {modifierCategory.modifiers.map((modifier, key) =>
-                                            <li key={`item-modifier-${key}`}>
-                                                {modifier.type === 'SINGLE' &&
-                                                <label>
-                                                    <input
-                                                        onChange={this.modifierUpdate}
-                                                        name={`category-${modifierCategory.id}`}
-                                                        value={1}
-                                                        data-id={modifier.id}
-                                                        data-name={modifier.name}
-                                                        data-price={modifier.price}
-                                                        data-category={modifier.modifier_group_id}
-                                                        required={modifierCategory.modifier_category_type_id === 1 ? 'required' : ''}
-                                                        type={['EXACT', 'OPTIONAL_MAX'].includes(modifierCategory.type) && modifierCategory.max_permitted == 1 ? 'radio' : 'checkbox'}/> {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
-                                                </label>
-                                                }
-                                                {modifier.type === 'MULTIPLE' &&
-                                                <label>
-                                                    {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
-                                                    <select
-                                                        onChange={this.modifierUpdate}
-                                                        name={`category-${modifierCategory.id}`}
-                                                        value={1}
-                                                        data-id={modifier.id}
-                                                        data-name={modifier.name}
-                                                        data-price={modifier.price}
-                                                        data-category={modifier.modifier_group_id}
-                                                    >
-                                                        {this.buildOptions(modifier)}
-                                                    </select>
-                                                </label>
-                                                }
-
-                                            </li>
-                                        )}
-                                    </ul>
+            <React.Fragment>
+                <div className="item-modal-container" style={{
+                    ...overlayDefaultStyle,
+                    ...overlayTransitionStyles[state]
+                }} onClick={(e) => this.props.closeModal(e)}>
+                    <div className="item-modal" style={{
+                        ...modalDefaultStyle,
+                        ...modalTransitionStyles[state]
+                    }}>
+                        <form onSubmit={this.onSubmit}>
+                            <div className="item-modal-content">
+                                <div className="top-close-button" onClick={(e) => this.props.closeModal(e)} >
+                                    <i className="icon ion-ios-close-circle"></i>
                                 </div>
-                            )}
+                                <h1>{loading ? <Skeleton width={170}/> : item.name}</h1>
+                                {loading ? <Skeleton width={170}/> : (item.description &&
+                                    <p>{item.description}</p>)}
+                                {loading ? '' : item.thumbnail && <img src={`/storage/${item.thumbnail}`}/>}
+                                {!loading && item.modifier_categories.length > 0 &&
+                                item.modifier_categories.map((modifierCategory, key) =>
+                                    <div className="item-meta" key={`item-modifier-category-${key}`}>
+                                        <div className="item-modifier-heading">
+                                            <div className="item-modifier-category">
+                                                {modifierCategory.name}
+                                            </div>
+                                            {modifierCategory.type === 'EXACT' &&
+                                            <div className="item-modifier-category-helper">
+                                                <span>Please select {modifierCategory.max_permitted}</span>
+                                            </div>
+                                            }
+                                            {modifierCategory.type === 'OPTIONAL_MAX' &&
+                                            <div className="item-modifier-category-helper">
+                                                <span>Choose up to {modifierCategory.max_permitted_per_option}</span>
+                                            </div>
+                                            }
+                                            {modifierCategory.type === 'RANGE' &&
+                                            <div className="item-modifier-category-helper">
+                                                {modifierCategory.min_permitted === 0 && modifierCategory.max_permitted > 0 &&
+                                                <span>Choose up to {modifierCategory.max_permitted}</span>}
+                                                {modifierCategory.min_permitted === modifierCategory.max_permitted &&
+                                                <span>Choose {modifierCategory.max_permitted}</span>}
+                                                {modifierCategory.min_permitted !== modifierCategory.max_permitted && modifierCategory.min_permitted > 0 && modifierCategory.max_permitted > 0 &&
+                                                <span>Choose a min of {modifierCategory.min_permitted} and max of {modifierCategory.max_permitted}</span>}
+                                            </div>
+                                            }
+                                            <div
+                                                className="item-modifier-type">{modifierCategory.type === 'OPTIONAL' ? 'Optional' : 'Required'}</div>
+                                        </div>
+                                        <ul>
+                                            {modifierCategory.modifiers.map((modifier, key) =>
+                                                <li key={`item-modifier-${key}`}>
+                                                    {modifier.type === 'SINGLE' &&
+                                                    <label>
+                                                        <input
+                                                            onChange={this.modifierUpdate}
+                                                            name={`category-${modifierCategory.id}`}
+                                                            value={1}
+                                                            data-id={modifier.id}
+                                                            data-name={modifier.name}
+                                                            data-price={modifier.price}
+                                                            data-category={modifier.modifier_group_id}
+                                                            required={modifierCategory.modifier_category_type_id === 1 ? 'required' : ''}
+                                                            type={['EXACT', 'OPTIONAL_MAX'].includes(modifierCategory.type) && modifierCategory.max_permitted == 1 ? 'radio' : 'checkbox'}/> {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
+                                                    </label>
+                                                    }
+                                                    {modifier.type === 'MULTIPLE' &&
+                                                    <label>
+                                                        {`${modifier.name}${modifier.price > 0 ? ` +$${modifier.price}` : ''}`}
+                                                        <select
+                                                            onChange={this.modifierUpdate}
+                                                            name={`category-${modifierCategory.id}`}
+                                                            value={1}
+                                                            data-id={modifier.id}
+                                                            data-name={modifier.name}
+                                                            data-price={modifier.price}
+                                                            data-category={modifier.modifier_group_id}
+                                                        >
+                                                            {this.buildOptions(modifier)}
+                                                        </select>
+                                                    </label>
+                                                    }
 
-                            <div className="form-group">
-                                {loading ? <label htmlFor=""><Skeleton width="100%" width={110} /></label> : <label htmlFor="">Extra Instructions</label>}
-                                {loading ? <Skeleton width="100%" height={62} /> :
-                                    <textarea></textarea>
-                                }
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                <div className="form-group">
+                                    {loading ? <label htmlFor=""><Skeleton width="100%" width={110}/></label> :
+                                        <label htmlFor="">Extra Instructions</label>}
+                                    {loading ? <Skeleton width="100%" height={62}/> :
+                                        <textarea></textarea>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <div className="item-modal-footer">
+                            <div className="item-modal-footer">
+                                <React.Fragment>
+                                    {loading ? <Skeleton width={170} height={40} className="pull-right"/> :
+                                        <button className="add" disabled={!this.isFormValid()}>
+                                            Add to cart - ${this.totalPrice()}
+                                        </button>
+                                    }
+                                    {loading ? <Skeleton width={60} height={40} className="pull-right"
+                                                         style={{marginRight: '10px'}}/> :
+                                        <input/>
+                                    }
+                                    {loading ? <Skeleton width={100} height={40}/> :
+                                        <button className="close" onClick={this.props.closeModal}>Cancel</button>
+                                    }
 
-                            <React.Fragment>
-                                {loading ? <Skeleton width={170} height={40}  className="pull-right" /> :
-                                    <button className="add" disabled={!this.isFormValid()}>
-                                        Add to cart - ${this.totalPrice()}
-                                    </button>
-                                }
-                                {loading ? <Skeleton width={60} height={40} className="pull-right" style={{marginRight: '10px'}} /> :
-                                    <input/>
-                                }
-                                {loading ? <Skeleton width={100} height={40} /> :
-                                    <button className="close" onClick={this.props.closeModal}>Cancel</button>
-                                }
-
-                            </React.Fragment>
-
-
-                        </div>
-                    </form>
+                                </React.Fragment>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+                )}
+            </React.Fragment>
         )
     }
 }

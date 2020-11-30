@@ -7,13 +7,13 @@
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 10000;
-    padding: 15px;
     background-color: rgba(0, 0, 0, 0.65);
     .item-modal {
         transform: translate(0,0);
         max-width: 630px;
         margin: 30px auto;
         position: relative;
+        z-index: 15000;
     }
     .item-modal-content {
         position: relative;
@@ -23,6 +23,11 @@
         .top-close-button {
             font-size: 32px;
             cursor: pointer;
+            display: inline-block;
+            > i {
+                pointer-events: none;
+                display: block;
+            }
         }
         h1 {
             margin: 20px 0 15px;

@@ -2,11 +2,31 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import {useLocation, Link} from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
+import {Transition} from 'react-transition-group';
 import AnchorLink from 'react-anchor-link-smooth-scroll'
 import urlSlug from 'url-slug';
 import {format, formatDistance, formatRelative, subDays} from 'date-fns'
 import ItemModal from './ItemModal';
 
+const duration = 225;
+
+const defaultStyle = {
+    transition: `transform ${duration}ms ease-in-out 0s`,
+    transform: `translate3d(0px, 0px, 0px) scale(.8)`
+};
+
+const transitionStyles = {
+    entering: {},
+    entered: {
+        transform: `translate3d(0px, 0px, 0px) scale(1)`
+    },
+    exiting: {
+        transform: `translate3d(0px, 0px, 0px) scale(.8)`
+    },
+    exited: {
+        transform: `translate3d(0px, 0px, 0px) scale(.8)`
+    },
+};
 
 class OrderPage extends Component {
 
@@ -38,10 +58,15 @@ class OrderPage extends Component {
         });
     }
 
-    closeModal() {
-        this.setState({
-            showModal: false,
-        });
+    closeModal(e) {
+        console.log(e)
+        console.log(e.target, e.currentTarget)
+        e.stopPropagation()
+        if (e.target === e.currentTarget) {
+            this.setState({
+                showModal: false,
+            });
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -61,20 +86,22 @@ class OrderPage extends Component {
         return (
             <React.Fragment>
                 <div className="container--order">
-                    <h1 className="food-truck-name">{loading ? <Skeleton width={170} /> : this.state.name}</h1>
-                    <div className="food-truck-address">{loading ? <Skeleton width={300} />  : `Current location: ${this.state.location.formatted_address}`}</div>
-                    <div className="food-truck-schedule">{loading ? <Skeleton width={190} /> : `Serving until ${formatRelative(dateObject, new Date())}`}</div>
+                    <h1 className="food-truck-name">{loading ? <Skeleton width={170}/> : this.state.name}</h1>
+                    <div className="food-truck-address">{loading ?
+                        <Skeleton width={300}/> : `Current location: ${this.state.location.formatted_address}`}</div>
+                    <div className="food-truck-schedule">{loading ?
+                        <Skeleton width={190}/> : `Serving until ${formatRelative(dateObject, new Date())}`}</div>
                 </div>
                 <div className="category-menu-wrapper">
                     <div className="container--order">
                         <ul className="category-menu">
-                            { loading &&
+                            {loading &&
                             <React.Fragment>
-                                <li><a><Skeleton width={60} /></a></li>
-                                <li><a><Skeleton width={60} /></a></li>
-                                <li><a><Skeleton width={60} /></a></li>
-                                <li><a><Skeleton width={60} /></a></li>
-                                <li><a><Skeleton width={60} /></a></li>
+                                <li><a><Skeleton width={60}/></a></li>
+                                <li><a><Skeleton width={60}/></a></li>
+                                <li><a><Skeleton width={60}/></a></li>
+                                <li><a><Skeleton width={60}/></a></li>
+                                <li><a><Skeleton width={60}/></a></li>
                             </React.Fragment>
                             }
                             {!loading && this.state.menu.map((category, key) =>
@@ -91,19 +118,19 @@ class OrderPage extends Component {
                     <div className="menu">
                         {loading &&
                         <div className="category">
-                            <div className="category-name"><Skeleton width={140} /></div>
+                            <div className="category-name"><Skeleton width={140}/></div>
                             <ul className="items">
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
                             </ul>
-                            <div className="category-name"><Skeleton width={140} /></div>
+                            <div className="category-name"><Skeleton width={140}/></div>
                             <ul className="items">
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
-                                <li className="item"><Skeleton height={120} /></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
+                                <li className="item"><Skeleton height={120}/></li>
                             </ul>
                         </div>
                         }
@@ -112,7 +139,8 @@ class OrderPage extends Component {
                                 <div className="category-name" id={category.name.toLowerCase()}>{category.name}</div>
                                 <ul className="items">
                                     {category.items.map((item, key) =>
-                                        <li onClick={() => this.showModal(item.id)} className={`item ${item.thumbnail ? 'item--has-thumbnail' : ''}`}
+                                        <li onClick={() => this.showModal(item.id)}
+                                            className={`item ${item.thumbnail ? 'item--has-thumbnail' : ''}`}
                                             key={`item-${item.id}`}>
                                             <div className="item-inner">
                                                 <div className="item-name">{item.name}</div>
@@ -130,12 +158,19 @@ class OrderPage extends Component {
                         )}
                     </div>
                 </div>
-                {this.state.showModal &&
-                    <ItemModal
-                        itemId={this.state.selectedItemId}
-                        event={this.state.event}
-                        closeModal={this.closeModal}/>
-                }
+                <Transition in={this.state.showModal} timeout={{
+                    appear: 0,
+                    enter: 225,
+                    exit: 225,
+                }} mountOnEnter={true} unmountOnExit={true}>
+                    {state => (
+                        <ItemModal
+                            state={state}
+                            itemId={this.state.selectedItemId}
+                            event={this.state.event}
+                            closeModal={this.closeModal}/>
+                    )}
+                </Transition>
             </React.Fragment>
         );
     }
