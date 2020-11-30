@@ -7,35 +7,36 @@
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 30000;
-    padding: 15px;
+    padding: 0;
     background-color: rgba(0, 0, 0, 0.65);
 }
-.open {
-    .cart {
-        right: 0%;
-    }
-}
+
+
 .cart {
     position: fixed;
-    right: -100%;
+    right: 0;
     top: 0;
     bottom: 0;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 24px;
     background: #ffffff;
     z-index: 20000;
     width: 340px;
-    transition: right 1000ms ease-out;
+    transition: transform 225ms ease-in-out 0s;
+    transform: translate3d(100%, 0px, 0px) scale(1);
     .cart-content {
         .cart-header {
             padding: 15px;
+
             .cart-truck-label {
                 margin: 0;
             }
+
             .cart-truck-name {
                 font-size: 24px;
                 margin: 5px 0 20px;
 
             }
+
             .close {
                 width: 40px;
                 height: 40px;
@@ -44,12 +45,14 @@
                 position: relative;
                 left: -10px;
                 top: -10px;
+
                 .ion-ios-close {
                     position: relative;
                     top: 3px;
                     left: 13px;
                 }
             }
+
             button {
                 padding: 9px 30px;
                 background: red;
@@ -62,46 +65,56 @@
                 max-height: 40px;
                 font-size: 18px;
                 line-height: 23px;
+
                 .left {
                     float: left;
                 }
+
                 .right {
                     float: right;
                 }
             }
+
             border-bottom: 1px solid #e0e1e5;
         }
+
         ul.cart-items {
             margin: 0;
             padding: 0;
             list-style-type: none;
+
             .cart-item {
                 padding: 15px;
                 border-bottom: 1px solid #e0e1e5;
                 position: relative;
                 min-height: 90px;
                 @include clearfix;
+
                 .cart-item-quantity {
                     width: 30px;
                     float: left;
                     font-size: 18px;
                     font-weight: 400;
                 }
+
                 .cart-item-body {
                     width: 280px;
                     float: left;
                     position: relative;
+
                     .cart-item-name {
                         font-size: 18px;
                         font-weight: 400;
                         padding-right: 60px;
                     }
+
                     .cart-item-price {
                         position: absolute;
                         right: 0;
                         top: 0;
                     }
                 }
+
                 .cart-item-modifiers {
                     margin: 0;
                     padding: 0;
@@ -109,6 +122,7 @@
                     color: #6b6b83;
                     font-size: 16px;
                 }
+
                 .cart-item-delete {
                     cursor: pointer;
                     position: absolute;
@@ -116,6 +130,7 @@
                     right: 8px;
                     height: 24px;
                     width: 24px;
+
                     > .icon {
                         left: 10px;
                         position: relative;

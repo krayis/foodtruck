@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -53,7 +42,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'merchant', 'as' => 'merchan
 
 Route::group(['middleware' => ['api']], function () {
     Route::get('api/item/{item}', 'ItemController@index')->name('api.menu.item');
-    Route::get('api/search/trucks', 'SearchController@trucks')->name('api.search@trucks');
+    Route::get('api/search/store', 'SearchController@trucks')->name('api.search@trucks');
     Route::get('api/search', 'SearchController@address')->name('api.search@address');
     Route::get('api/search/suggestions', 'SearchController@suggestions')->name('api.search@suggestions');
 });
