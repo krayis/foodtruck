@@ -59,7 +59,7 @@ Route::group(['middleware' => ['api']], function () {
 });
 
 
-Route::get('api/truck/{truck}', 'TruckController@index')->name('api.truck');
+Route::get('api/store/{id}', 'StoreController@index')->name('api.store');
 Route::get('checkout/{id}', 'SearchController@index')->name('search.index');
 Route::get('store/{id}', 'SearchController@index')->name('search.index');
 Route::resource('api/checkout', 'CheckoutController');

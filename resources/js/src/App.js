@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Routes from './routes';
 import {  BrowserRouter as Router } from 'react-router-dom';
+import { createBrowserHistory } from "history";
 import Header from './containers/Header';
 import CartProvider from './CartProvider';
 import Cart from './containers/Cart';

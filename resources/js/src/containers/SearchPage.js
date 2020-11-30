@@ -20,7 +20,7 @@ class SearchPage extends Component {
 
     fetchData() {
         const params = queryString.parse(location.search);
-        axios.get(`/api/search/trucks`, {params}).then(response => {
+        axios.get(`/api/search/store`, {params}).then(response => {
             this.setState({
                 trucks: response.data,
                 loading: false,
@@ -49,9 +49,8 @@ class SearchPage extends Component {
                     <div className="topbar">
 
                         <h1>{this.state.loading ? <Skeleton
-                            width={170}/> : `${this.state.trucks.length} ${this.state.trucks.length === 1 ? 'truck' : 'trucks'} found`}</h1>
+                            width={170}/> : `${this.state.trucks.length} food ${this.state.trucks.length === 1 ? 'truck' : 'trucks'} nearby`}</h1>
                         <form className="form-inline">
-
                             {this.state.loading ? <Skeleton width={165} height={28}/> :
                                 <React.Fragment>
                                     <label>Distance:</label>

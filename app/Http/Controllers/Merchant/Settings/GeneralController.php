@@ -26,24 +26,28 @@ class GeneralController extends Controller
     public function update(Request $request)
     {
         $timezones = Timezones::get();
-        $validate = $request->validate([
+
+        $request->validate([
             'timezone' => ['required', Rule::in(array_keys($timezones))],
             'name' => ['required'],
             'email' => ['required', 'email'],
-            'mobile_phone' => ['required'],
+            'mobile_phone' => ['required', 'string', 'min:9', 'max:25'],
         ]);
 
         $user = Auth::user();
 
+        $mobilPhone = preg_replace('/\D/', '',$request->input('mobile_phone'));
+
         $user->truck->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'mobile_phone' => $request->input('mobile_phone'),
+            'mobile_phone' => $mobilPhone,
         ]);
 
         $user->update([
             'timezone' => $request->input('timezone'),
         ]);
+
         return redirect()->route('merchant.settings.index')->with('success', 'Truck setting was updated successfully');
     }
 

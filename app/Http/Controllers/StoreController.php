@@ -13,10 +13,16 @@ use App\Zone;
 use App\Timezone;
 use Illuminate\Support\Facades\DB;
 
-class TruckController extends Controller
+class StoreController extends Controller
 {
-    public function index(Request $request, Truck $truck)
+    public function index(Request $request, $id)
     {
+        if (strrpos($id, '-') !== false) {
+            $id = substr($id, strrpos($id, '-') + 1);
+        }
+
+        $truck = Truck::find($id);
+
         $response = [
             'name' => $truck->name,
             'mobile_phone' => $truck->mobile_phone,

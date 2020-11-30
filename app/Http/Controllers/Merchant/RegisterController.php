@@ -17,31 +17,33 @@ class RegisterController extends Controller
     {
         $timezones = Timezones::get();
 
-        $validate = $request->validate([
+        $request->validate([
             'food_truck_name' => ['required', 'string', 'min:3', 'max:255'],
             'first_name' => ['required', 'string', 'min:3', 'max:45'],
             'last_name' => ['required', 'string', 'min:3', 'max:45'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'mobile_phone' => ['required', 'string', 'max:255'],
+            'mobile_phone' => ['required', 'string', 'min:9', 'max:25'],
             'password' => ['required', 'string', 'min:3', 'confirmed'],
             'timezone' => ['required', Rule::in(array_keys($timezones))],
         ]);
+
+        $mobilePhone = preg_replace('/\D/', '', $request->input('mobile_phone'));
 
         $user = User::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'email_notification' => $request->input('email'),
-            'mobile_phone' => $request->input('mobile_phone'),
+            'mobile_phone' => $mobilePhone,
             'password' => Hash::make($request->input('password')),
             'timezone' => $request->input('timezone'),
         ]);
 
-        $truck = Truck::create([
+        Truck::create([
             'user_id' => $user->id,
             'name' => $request->input('food_truck_name'),
             'email' => $request->input('email'),
-            'mobile_phone' => $request->input('mobile_phone'),
+            'mobile_phone' => $mobilePhone,
             'throttle_type' => 0,
         ]);
 

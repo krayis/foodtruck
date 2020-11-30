@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom';
+import {useLocation, Link} from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import AnchorLink from 'react-anchor-link-smooth-scroll'
+import urlSlug from 'url-slug';
 import {format, formatDistance, formatRelative, subDays} from 'date-fns'
 import ItemModal from './ItemModal';
 
@@ -20,8 +21,12 @@ class OrderPage extends Component {
     }
 
     fetch() {
-        axios.get(`/api/truck/${this.props.match.params.id}`).then(response => {
+        axios.get(`/api/store/${this.props.match.params.id}`).then(response => {
             this.setState({...response.data, loading: false});
+            const parts = this.props.match.params.id.split('-');
+            const id = parts[parts.length - 1];
+            const link = `/store/${urlSlug(response.data.name)}-${id}`;
+            this.props.history.push(link)
         });
     }
 

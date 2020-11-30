@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios'
+import Skeleton from 'react-loading-skeleton';
 import CartContext from '../CartContext';
 import {v4 as uuidv4} from 'uuid';
 
@@ -166,31 +167,19 @@ class ItemModal extends Component {
         return arr;
     }
     render() {
-        if (this.state.loading) {
-            return (
-                <div className="item-modal-container">
-                    <div className="item-modal">
-                        <div className="item-modal-content">
-                            Loading...
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-
         const item = this.state.item;
+        const loading = this.state.loading;
         return (
-
             <div className="item-modal-container">
                 <div className="item-modal">
                     <form onSubmit={this.onSubmit}>
                         <div className="item-modal-content">
                             <div onClick={this.props.closeModal} className="top-close-button"><i
                                 className="icon ion-ios-close-circle"></i></div>
-                            <h1>{item.name}</h1>
-                            {item.description && <p>{item.description}</p>}
-                            {item.thumbnail && <img src={`/storage/${item.thumbnail}`}/>}
-                            {item.modifier_categories.length > 0 &&
+                            <h1>{loading ? <Skeleton width={170}/> : item.name}</h1>
+                            {loading ? <Skeleton width={170}/> : (item.description && <p>{item.description}</p>)}
+                            {loading ? '': item.thumbnail && <img src={`/storage/${item.thumbnail}`}/>}
+                            {!loading && item.modifier_categories.length > 0 &&
                             item.modifier_categories.map((modifierCategory, key) =>
                                 <div className="item-meta" key={`item-modifier-category-${key}`}>
                                     <div className="item-modifier-heading">
@@ -261,17 +250,30 @@ class ItemModal extends Component {
                             )}
 
                             <div className="form-group">
-                                <label htmlFor="">Extra Instructions</label>
-                                <textarea></textarea>
+                                {loading ? <label htmlFor=""><Skeleton width="100%" width={110} /></label> : <label htmlFor="">Extra Instructions</label>}
+                                {loading ? <Skeleton width="100%" height={62} /> :
+                                    <textarea></textarea>
+                                }
                             </div>
                         </div>
                         <div className="item-modal-footer">
-                            <button className="add" disabled={!this.isFormValid()}>Add
-                                to
-                                cart
-                                - ${this.totalPrice()}</button>
-                            <input/>
-                            <button className="close" onClick={this.props.closeModal}>Cancel</button>
+
+                            <React.Fragment>
+                                {loading ? <Skeleton width={170} height={40}  className="pull-right" /> :
+                                    <button className="add" disabled={!this.isFormValid()}>
+                                        Add to cart - ${this.totalPrice()}
+                                    </button>
+                                }
+                                {loading ? <Skeleton width={60} height={40} className="pull-right" style={{marginRight: '10px'}} /> :
+                                    <input/>
+                                }
+                                {loading ? <Skeleton width={100} height={40} /> :
+                                    <button className="close" onClick={this.props.closeModal}>Cancel</button>
+                                }
+
+                            </React.Fragment>
+
+
                         </div>
                     </form>
                 </div>
