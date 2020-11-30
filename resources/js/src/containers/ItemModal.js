@@ -106,6 +106,7 @@ class ItemModal extends Component {
         this.isFormValid = this.isFormValid.bind(this);
         this.modifierUpdate = this.modifierUpdate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     fetch() {
@@ -208,6 +209,11 @@ class ItemModal extends Component {
         return arr;
     }
 
+    closeModal(e) {
+        if (e.target === e.currentTarget) {
+            this.props.closeModal();
+        }
+    }
     render() {
         const item = this.state.item;
         const loading = this.state.loading;
@@ -217,14 +223,14 @@ class ItemModal extends Component {
                 <div className="item-modal-container" style={{
                     ...overlayDefaultStyle,
                     ...overlayTransitionStyles[state]
-                }} onClick={(e) => this.props.closeModal(e)}>
+                }} onClick={(e) => this.closeModal(e)}>
                     <div className="item-modal" style={{
                         ...modalDefaultStyle,
                         ...modalTransitionStyles[state]
                     }}>
                         <form onSubmit={this.onSubmit}>
                             <div className="item-modal-content">
-                                <div className="top-close-button" onClick={(e) => this.props.closeModal(e)} >
+                                <div className="top-close-button" onClick={(e) => this.closeModal(e)} >
                                     <i className="icon ion-ios-close-circle"></i>
                                 </div>
                                 <h1>{loading ? <Skeleton width={170}/> : item.name}</h1>
@@ -318,10 +324,10 @@ class ItemModal extends Component {
                                     }
                                     {loading ? <Skeleton width={60} height={40} className="pull-right"
                                                          style={{marginRight: '10px'}}/> :
-                                        <input/>
+                                        <input value={1} pattern="[0-9]*" />
                                     }
                                     {loading ? <Skeleton width={100} height={40}/> :
-                                        <button className="close" onClick={this.props.closeModal}>Cancel</button>
+                                        <button className="close" onClick={this.closeModal}>Cancel</button>
                                     }
 
                                 </React.Fragment>

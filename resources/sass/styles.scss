@@ -1,4 +1,5 @@
 $mobile-breakpoint: 768px;
+$brand-primary: #e00051;
 
 html, body {
     padding: 0;
@@ -52,7 +53,6 @@ h1, h2, h3, h4, h5 {
     font-weight: 400;
 }
 
-$brand-primary: #ff0100;
 $brand-blue: #3830e7;
 
 .navbar {
@@ -76,7 +76,7 @@ $brand-blue: #3830e7;
         transform: translate(-50%, -50%);
         a {
             font-weight: bold;
-            color: #ff0102;
+            color: $brand-primary;
             text-decoration: none;
         }
     }
@@ -129,7 +129,7 @@ $brand-blue: #3830e7;
                 &.back-button {
                     float: left;
                     a {
-                        color: red;
+                        color: $brand-primary;
                         font-weight: 500;
                         text-decoration: none;
                         margin: 0;
@@ -281,7 +281,7 @@ $brand-blue: #3830e7;
     .cart-icon {
         cursor: pointer;
         padding: 13px 17px;
-        background: red;
+        background: $brand-primary;
         color: #ffffff;
         border-radius: 4px;
         height: 40px;

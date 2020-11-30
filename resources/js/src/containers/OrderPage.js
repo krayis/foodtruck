@@ -58,15 +58,10 @@ class OrderPage extends Component {
         });
     }
 
-    closeModal(e) {
-        console.log(e)
-        console.log(e.target, e.currentTarget)
-        e.stopPropagation()
-        if (e.target === e.currentTarget) {
-            this.setState({
+    closeModal() {
+        this.setState({
                 showModal: false,
-            });
-        }
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -86,11 +81,20 @@ class OrderPage extends Component {
         return (
             <React.Fragment>
                 <div className="container--order">
-                    <h1 className="food-truck-name">{loading ? <Skeleton width={170}/> : this.state.name}</h1>
+                    <h1 className="food-truck-name">
+                        {loading ? <Skeleton width={170}/> : this.state.name}
+                        {!loading && <i className="icon ion-ios-calendar pull-right"></i>}
+                    </h1>
                     <div className="food-truck-address">{loading ?
-                        <Skeleton width={300}/> : `Current location: ${this.state.location.formatted_address}`}</div>
-                    <div className="food-truck-schedule">{loading ?
-                        <Skeleton width={190}/> : `Serving until ${formatRelative(dateObject, new Date())}`}</div>
+                        <Skeleton width={410} style={{maxWidth: '100%'}}/> : <div><i className="icon ion-ios-pin"></i> {this.state.location.formatted_address}</div>}
+                    </div>
+                    <div className="food-truck-schedule">
+                        {loading && <Skeleton width={300} style={{maxWidth: '100%'}}/>}
+                        {!loading && `Serving until ${formatRelative(dateObject, new Date())}`}
+                        {!loading && <span className="separator">-</span>}
+                        {!loading && <i className="icon ion-ios-calendar"></i>}
+                        {!loading && ' View schedule'}
+                    </div>
                 </div>
                 <div className="category-menu-wrapper">
                     <div className="container--order">

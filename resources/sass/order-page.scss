@@ -18,6 +18,10 @@
     }
     .food-truck-schedule {
         margin-bottom: 30px;
+        .separator {
+            display: inline-block;
+            margin: 0 5px;
+        }
     }
     .category-menu {
         list-style-type: none;
